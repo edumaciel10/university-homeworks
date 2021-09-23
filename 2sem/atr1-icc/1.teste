@@ -1,0 +1,2 @@
+gcc -Wall -Werror -g  main.c -o atr -lm
+./atr

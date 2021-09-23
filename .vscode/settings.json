@@ -1,0 +1,17 @@
+{
+  "files.associations": {
+    "*.mdx": "markdown",
+    "ponto.h": "c",
+    "caminho.h": "c",
+    "stdlib.h": "c",
+    "stdio.h": "c",
+    "catalogo.h": "c",
+    "utils.h": "c",
+    "string.h": "c",
+    "catalog.h": "c",
+    "game.h": "c",
+    "sstream": "c",
+    "random": "c"
+  },
+  "C_Cpp.errorSquiggles": "Enabled"
+}
