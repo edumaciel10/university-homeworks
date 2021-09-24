@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "Deck.h"
 
 struct deck_st {
@@ -58,11 +59,55 @@ CARD* popDeck(DECK* deck){
     return NULL;
 }
 
+void getDeckCards(DECK* deck) {
+    CARD *card = NULL;
+    char *suit;
+    char *number;
+    for (int i = 0; i < TAM; i++)
+    {
+        if(!scanf("%s", suit)) {
+            break;
+        }
+
+        if(!scanf("%s", number)) {
+            break;
+        }
+
+        card = createCard(i, suit, number);
+        item_imprimir(card);
+        if (card != NULL)
+        {
+            pushDeck(deck, card);
+        }
+    }
+}
+int getSumCardsOfDeck(DECK * deck) {
+    CARD *card = NULL;
+    int sumOfCards = 0;
+    for (int i = 0; i < TAM; i++)
+    {
+        card = popDeck(deck);
+        sumOfCards += getCardNumber(card);
+        if(sumOfCards >= 21) {
+            return sumOfCards;
+        }
+    }
+}
+
+void printResult(int sumOfCards) {
+    if(sumOfCards == 21) {
+        printf("\nGanhou ;)");
+    } else {
+        printf("\nPerdeu :(");
+        printf("\nSoma :: %d", sumOfCards);
+    }
+}
+
 int deleteDeck(DECK **deck)
 {
     if (*deck != NULL)
     {
-        (*deck)->top = DECK_ERROR; /*apaga o item simbolicamente*/
+        (*deck)->top = DECK_ERROR;
         free (*deck);
         *deck = NULL;
         return 1;
