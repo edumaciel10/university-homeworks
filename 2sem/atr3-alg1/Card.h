@@ -11,5 +11,5 @@ int deleteCard(CARD **card);
 void printCard(const CARD *card);
 int getCardNumber(const CARD *card);
 void item_imprimir(const CARD *item);
-
+int isLetter(char *letter);
 #endif //CARD_H

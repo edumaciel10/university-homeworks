@@ -14,17 +14,11 @@ CARD *createCard(int key, char *suit, char *number)
 {
 
   CARD *card;
-
   card = (CARD *)malloc(sizeof(CARD));
-  printf("To aqq");
 
   if (card != NULL)
   {
-    printf("To aqq");
-
     card->key = key;
-    card->suit = (char *)malloc(sizeof(suit));
-    card->number = (char *)malloc(sizeof(number));
     strcpy(card->suit, suit);
     strcpy(card->number, number);
     return card;
@@ -36,9 +30,18 @@ int deleteCard(CARD **card)
 {
   if (*card != NULL)
   {
-    (*card)->key = ERRO; /*apaga o item simbolicamente*/
+    (*card)->key = ERRO;
     free(*card);
     *card = NULL;
+    return 1;
+  }
+  return 0;
+}
+
+int isLetter(char *letter) {
+  if(strstr(letter,"V") != NULL ||
+      strstr(letter,"D") != NULL ||
+      strstr(letter,"R") != NULL) {
     return 1;
   }
   return 0;
@@ -48,16 +51,21 @@ int getCardNumber(const CARD *card)
 {
   if (card != NULL)
   {
-    return ((strlen(card->number) == 1 ? 10 : atoi(card->number)));
+    if (isLetter(card->number) == 1)
+    {
+      return 10;
+    }
+    return atoi(card->number);
   }
+
   return ERRO;
 }
 void item_imprimir(const CARD *item)
 {
   if (item != NULL)
   {
-    printf("\n-->chave: %d\n", item->key);
-    printf("\n-->nome: %s\n", item->suit);
-    printf("\n-->ataque: %s\n", item->number);
+    printf("\n-->key: %d", item->key);
+    printf("\n-->suit: %s", item->suit);
+    printf("\n-->number: %s", item->number);
   }
 }

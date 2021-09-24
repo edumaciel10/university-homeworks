@@ -15,6 +15,10 @@ int lengthDeck(const DECK *deck);
 int pushDeck(DECK *deck, CARD* card);
 CARD* topDeck(const DECK *deck);
 CARD* popDeck(DECK* deck);
-int deleteDeck(DECK **deck);// bool
+void getDeckCards(DECK* deck);
+int getSumCardsOfDeck(DECK* deck);
+void printResult(int sumOfCards);
+
+int deleteDeckAndCards(DECK **deck);// bool
 
 #endif //DECK_H
