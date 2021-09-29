@@ -40,42 +40,29 @@ int main()
   }
 }
 
-void insertionSort(int *array, int sizeOfArray)
+void insertionSort(int array[], int sizeOfArray)
 {
   int swap = 0;
+  int actualValue = 0;
   int comparison = 0;
-  int aux = 0;
-  for (int i = 0; i < sizeOfArray - 1; i++)
+  int j = 0;
+  for (int i = 1; i < sizeOfArray; i++)
   {
+    actualValue = array[i];
+    j = i - 1;
+    swap++;
     comparison++;
-    // printf("\n compare %d > %d", array[i], array[i + 1]);
-    if (array[i] > array[i + 1])
+    while (j >= 0 && array[j] > actualValue)
     {
-      swap++;
-      // printf("\n swap %d -> %d", array[i], array[i + 1]);
-      aux = array[i + 1];
-      array[i + 1] = array[i];
-      array[i] = aux;
-      for (int j = i; j > 0; j--)
-      {
-        // printf("\n compare %d > %d", array[i], array[i + 1]);
+      array[j + 1] = array[j];
+      j--;
+      if (j >= 0)
         comparison++;
-        if (array[j] < array[j - 1])
-        {
-          // printArray(array, sizeOfArray);
-          // printf("\n swap %d -> %d", array[j], array[j + 1]);
-          swap++;
-          aux = array[j];
-          array[j] = array[j - 1];
-          array[j - 1] = aux;
-          // printArray(array, sizeOfArray);
-        }
-        else
-        {
-          break;
-        }
-      }
+      swap++;
     }
+
+    array[j + 1] = actualValue;
+    swap++;
   }
   printf("\n I %d %d %d", sizeOfArray, swap, comparison);
 }
