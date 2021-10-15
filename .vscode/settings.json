@@ -25,7 +25,9 @@
     "vector": "c",
     "streambuf": "c",
     "functional": "c",
-    "tuple": "c"
+    "tuple": "c",
+    "lista.h": "c",
+    "item.h": "c"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }
