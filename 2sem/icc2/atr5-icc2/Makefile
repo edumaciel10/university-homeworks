@@ -2,8 +2,7 @@ MAIN=main.c
 BINARY=atr
 
 all:
-	gcc -g $(MAIN) -o $(BINARY)
-	gcc -g main.c 
+	gcc -Wall -Werror -Wextra -g $(MAIN) -o $(BINARY)
 
 run:
 	./$(BINARY)
