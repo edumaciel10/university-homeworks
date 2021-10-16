@@ -2,7 +2,7 @@ ITEM = Item/Item.c
 MAIN = Main.c
 UTIL = Util/Util.c
 PILHA = Pilha/PilhaEncadeada.c
-LISTA = Lista/ListaSequencial.c
+LISTA = Lista/ListaEncadeada.c
 BINARY = main
 NAME = TAD
 

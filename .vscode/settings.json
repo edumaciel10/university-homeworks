@@ -27,7 +27,8 @@
     "functional": "c",
     "tuple": "c",
     "lista.h": "c",
-    "item.h": "c"
+    "item.h": "c",
+    "util.h": "c"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }

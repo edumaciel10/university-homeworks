@@ -7,12 +7,13 @@
 
 typedef struct item_st ITEM;
 
-ITEM *item_criar(int chave, int valor, int tamanho);
+ITEM *item_criar(int chave, int valor, int tamanho, int isBool);
 boolean item_apagar(ITEM **item);
 void item_imprimir(const ITEM *item);
 void item_imprimir_valor(const ITEM *item);
 int item_get_chave(const ITEM *item);
 boolean item_set_chave(ITEM *item, int chave);
 int item_somar(const ITEM *item1, const ITEM *item2);
+int item_retorna_valor(const ITEM *item);
 
 #endif //ITEM_H
