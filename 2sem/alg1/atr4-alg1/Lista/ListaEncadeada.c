@@ -45,10 +45,12 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
     char aux[4];
     ITEM *item;
     ITEM *item1;
-    LISTA *auxLista = lista_criar();
-    LISTA *auxLista1 = lista_criar();
+
     for (int i = 0; i < operations; i++)
     {
+        LISTA *auxLista = lista_criar();
+        LISTA *auxLista1 = lista_criar();
+        lista[i] = lista_criar();
         setbuf(stdin, 0);
         scanf("%s", operation);
         scanf("%s", firstNumber);
@@ -71,11 +73,10 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
             }
             memset(aux, 0, strlen(aux));
         }
-        setbuf(stdin, 0);
 
         scanf("%s", secondNumber);
-        break;
         length1 = strlen(secondNumber);
+
         for (int j = 0; j < (strlen(secondNumber) / 4) + 1; j++)
         {
             if (length1 - 4 >= 0)
@@ -92,14 +93,13 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
                 lista_inserir(auxLista1, item);
             }
             memset(aux, 0, strlen(aux));
-            item_apagar(&item);
         }
-        lengthBiggestNumber = strlen(firstNumber) > strlen(secondNumber) ? strlen(firstNumber) : strlen(secondNumber);
-        printf("[Aqui eu cheguei em!");
-        for (int i = 0; i < lengthBiggestNumber; i++)
+        lengthBiggestNumber = strlen(firstNumber) > strlen(secondNumber) ? strlen(firstNumber) / 4 : strlen(secondNumber);
+        lengthBiggestNumber = (lengthBiggestNumber / 4) + 1;
+        for (int j = 0; j < lengthBiggestNumber; j++)
         {
-            item = lista_busca_sequencial(auxLista, i);
-            item1 = lista_busca_sequencial(auxLista1, i);
+            item = lista_busca_sequencial(auxLista, j);
+            item1 = lista_busca_sequencial(auxLista1, j);
             valorLista2 = item_somar(item, item1) + carry;
             // pode ser 0000 -> 0
             // pode ser 0001 -> 1
@@ -115,17 +115,18 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
             {
                 carry = 0;
             }
-            lista_inserir(lista[i], item_criar(i, valorLista2, 4, 0));
+            lista_inserir(lista[i], item_criar(j, valorLista2, 4, 0));
         }
     }
-    return 0;
+    setbuf(stdout, 0);
     for (int i = 0; i < operations; i++)
     {
-        for (int j = 0; j < lista_tamanho(lista[i]); j++)
+        printf("Resultado :: ");
+        for (int j = lista_tamanho(lista[i]); j >= 0; j--)
         {
-            item_imprimir_valor(lista_busca_sequencial(lista[j], i));
-            printf("\n");
+            item_imprimir_valor(lista_busca_sequencial(lista[i], j));
         }
+        printf("\n");
     }
     return 0;
 }
@@ -222,4 +223,8 @@ boolean lista_remover_item(LISTA *lista, int chave)
         }
     }
     return FALSE;
+}
+
+void lista_mostrar_resultados(LISTA *lista, int operacoes)
+{
 }
