@@ -41,6 +41,8 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
     int length1 = 0;
     int lengthBiggestNumber = 0;
     int valorLista2 = 0;
+    int valorItem1 = 0;
+    int valorItem2 = 0;
     int carry = 0;
     char aux[4];
     ITEM *item;
@@ -98,9 +100,26 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
         lengthBiggestNumber = (lengthBiggestNumber / 4) + 1;
         for (int j = 0; j < lengthBiggestNumber; j++)
         {
-            item = lista_busca_sequencial(auxLista, j);
-            item1 = lista_busca_sequencial(auxLista1, j);
-            valorLista2 = item_somar(item, item1) + carry;
+            if (lista_tamanho(auxLista) - 1 > j)
+            {
+                item = lista_busca_sequencial(auxLista, j);
+                valorItem1 = item_retorna_valor(item);
+            }
+            else
+            {
+                valorItem1 = 0;
+            }
+
+            if (lista_tamanho(auxLista1) - 1 > j)
+            {
+                item1 = lista_busca_sequencial(auxLista1, j);
+                valorItem2 = item_retorna_valor(item1);
+            }
+            else
+            {
+                valorItem2 = 0;
+            }
+            valorLista2 = valorItem1 + valorItem2 + carry;
             // pode ser 0000 -> 0
             // pode ser 0001 -> 1
             // pode ser 0010 -> 10
@@ -118,6 +137,7 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
             lista_inserir(lista[i], item_criar(j, valorLista2, 4, 0));
         }
     }
+
     setbuf(stdout, 0);
     for (int i = 0; i < operations; i++)
     {

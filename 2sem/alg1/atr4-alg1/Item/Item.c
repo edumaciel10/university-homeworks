@@ -80,6 +80,14 @@ void item_imprimir_valor(const ITEM *item)
         printf("%d", item->valor);
     }
 }
+int item_retorna_valor(const ITEM *item)
+{
+    if (item != NULL)
+    {
+        return item->valor;
+    }
+    return 0;
+}
 // LISTA *lista;
 // lista = lista_criar();
 // ITEM *item = item_ler_std_in();

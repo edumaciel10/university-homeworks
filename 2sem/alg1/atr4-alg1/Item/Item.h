@@ -14,5 +14,6 @@ void item_imprimir_valor(const ITEM *item);
 int item_get_chave(const ITEM *item);
 boolean item_set_chave(ITEM *item, int chave);
 int item_somar(const ITEM *item1, const ITEM *item2);
+int item_retorna_valor(const ITEM *item);
 
 #endif //ITEM_H
