@@ -1,26 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void compareMethods(int array[], int arraySize)
-{
-  int shellOperations = shellSort(array, arraySize);
-  // shellSort(array, arraySize, shellOperations);
-  int quickOperations = quickSort(array, arraySize + 1);
-
-  // printf("\n quickOperations = %d ", quickOperations);
-  if (quickOperations < shellOperations)
-  {
-    printf("Q ");
-  }
-  if (shellOperations < quickOperations)
-  {
-    printf("S ");
-  }
-  if (shellOperations == quickOperations)
-  {
-    printf("- ");
-  }
-}
 int shellSort(int v[], int n)
 {
   int count = 0;
@@ -73,7 +53,7 @@ int _quick(int array[], int init, int final, int count)
 {
   if (init >= final)
   {
-    return;
+    return count;
   }
   int indexOfPivot = (init + final) / 2;
   int pivot = array[indexOfPivot];
@@ -82,14 +62,18 @@ int _quick(int array[], int init, int final, int count)
   int aux = 0;
   while (1)
   {
+    count++;
+
     while (array[indexOfInit] < pivot)
     {
-      // *operations++;
+      count++;
       indexOfInit++;
     }
+    count++;
+
     while (array[indexOfFinal] > pivot)
     {
-      // *operations++;
+      count++;
       indexOfFinal--;
     }
     if (indexOfFinal <= indexOfInit)
@@ -97,36 +81,72 @@ int _quick(int array[], int init, int final, int count)
       break;
     }
     aux = array[indexOfInit];
+    count++;
     array[indexOfInit] = array[indexOfFinal];
+    count++;
     array[indexOfFinal] = aux;
-    *operations++;
-    *operations++;
+    count++;
     indexOfInit++;
     indexOfFinal--;
   }
-  _quick(array, init, indexOfFinal, operations);
-  _quick(array, indexOfFinal + 1, final, operations);
+  count += _quick(array, init, indexOfFinal, 0);
+  count += _quick(array, indexOfFinal + 1, final, 0);
+  return count;
 }
 
 int quickSort(int array[], int arraySize)
 {
-  int operations = _quick(array, 0, arraySize - 1);
+  int count = _quick(array, 0, arraySize - 1, 0);
+  return count;
+}
+
+void compareMethods(int array[], int arraySize)
+{
+  int duplicatedArray[arraySize];
   for (int i = 0; i < arraySize; i++)
   {
-    printf("%d ", array[i]);
+    duplicatedArray[i] = array[i];
   }
+
+  // int shellOperations = shellSort(array, arraySize);
+  // printf("\n");
+  // for (int i = 0; i < arraySize; i++)
+  // {
+  //   printf(" %d ", array[i]);
+  // }
+  // printf("\n");
+  int quickOperations = quickSort(duplicatedArray, arraySize);
+
+  printf("\n quick = %d arraySize = %d", quickOperations, arraySize);
   printf("\n");
+  for (int i = 0; i < arraySize; i++)
+  {
+    printf(" %d ", duplicatedArray[i]);
+  }
+  // if (quickOperations < shellOperations)
+  // {
+  //   printf("Q ");
+  // }
+  // if (shellOperations < quickOperations)
+  // {
+  //   printf("S ");
+  // }
+  // if (shellOperations == quickOperations)
+  // {
+  //   printf("- ");
+  // }
 }
+
 int main()
 {
   int arraySize = 0;
-  scanf("%d", &arraySize);
-  int array[arraySize];
-  for (int i = 0; i < arraySize; i++)
+  scanf("%d", &arraySize);            // 4
+  int array[arraySize];               // array[4]
+  for (int i = 0; i < arraySize; i++) // [3 6 5 2 ]
   {
     scanf("%d", &array[i]);
   }
-  int *tempArray = malloc(1 * sizeof(int));
+  int *tempArray = (int *)malloc(1 * sizeof(int));
 
   for (int i = 0; i < arraySize; i++)
   {
