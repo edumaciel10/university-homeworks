@@ -85,7 +85,7 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
             memset(aux, 0, strlen(aux));
             item_apagar(&item);
         }
-        lengthBiggestNumber = firstNumber > secondNumber ? firstNumber : secondNumber;
+        lengthBiggestNumber = strlen(firstNumber) > strlen(secondNumber) ? strlen(firstNumber) : strlen(secondNumber);
         for (int i = 0; i < lengthBiggestNumber; i++)
         {
             item = lista_busca_ordenada(auxLista, i);
@@ -116,6 +116,7 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
             printf("\n");
         }
     }
+    return 0;
 }
 
 boolean lista_inserir(LISTA *lista, ITEM *item)

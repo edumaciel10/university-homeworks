@@ -2,6 +2,10 @@
 #include "../Lista/Lista.h"
 #include "../Item/Item.h"
 
+#include <malloc.h>
+#include "Lista.h"
+#include <string.h>
+
 typedef struct node_st NODE;
 
 struct node_st
@@ -30,14 +34,13 @@ LISTA *lista_criar()
 }
 int lista_preencher_resultados(LISTA *lista[], int operations)
 {
-    char *operation = malloc(6 * sizeof(char));     // soma maior menor menos igual
-    char *firstNumber = malloc(25 * sizeof(char));  // vai pegar primeiro numero
-    char *secondNumber = malloc(25 * sizeof(char)); // vai pegar segundo numero
+    char operation[6];     // soma maior menor menos igual
+    char firstNumber[25];  // vai pegar primeiro numero
+    char secondNumber[25]; // vai pegar segundo numero
     int length = 0;
     int length1 = 0;
     int lengthBiggestNumber = 0;
     int valorLista2 = 0;
-    int tamanhoLista2 = 0;
     int carry = 0;
     char aux[4];
     ITEM *item;
@@ -46,8 +49,10 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
     LISTA *auxLista1 = lista_criar();
     for (int i = 0; i < operations; i++)
     {
+        setbuf(stdin, 0);
         scanf("%s", operation);
         scanf("%s", firstNumber);
+        // scanf("%s", secondNumber);
         length = strlen(firstNumber);
         for (int j = 0; j < (strlen(firstNumber) / 4) + 1; j++)
         {
@@ -65,9 +70,11 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
                 lista_inserir(auxLista, item);
             }
             memset(aux, 0, strlen(aux));
-            item_apagar(item);
         }
+        setbuf(stdin, 0);
+
         scanf("%s", secondNumber);
+        break;
         length1 = strlen(secondNumber);
         for (int j = 0; j < (strlen(secondNumber) / 4) + 1; j++)
         {
@@ -85,12 +92,14 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
                 lista_inserir(auxLista1, item);
             }
             memset(aux, 0, strlen(aux));
+            item_apagar(&item);
         }
-        lengthBiggestNumber = firstNumber > secondNumber ? firstNumber : secondNumber;
+        lengthBiggestNumber = strlen(firstNumber) > strlen(secondNumber) ? strlen(firstNumber) : strlen(secondNumber);
+        printf("[Aqui eu cheguei em!");
         for (int i = 0; i < lengthBiggestNumber; i++)
         {
-            item = lista_busca_ordenada(auxLista, i);
-            item1 = lista_busca_ordenada(auxLista1, i);
+            item = lista_busca_sequencial(auxLista, i);
+            item1 = lista_busca_sequencial(auxLista1, i);
             valorLista2 = item_somar(item, item1) + carry;
             // pode ser 0000 -> 0
             // pode ser 0001 -> 1
@@ -106,19 +115,20 @@ int lista_preencher_resultados(LISTA *lista[], int operations)
             {
                 carry = 0;
             }
-            lista_inserir(lista[operations], item_criar(i, valorLista2, 4, 0));
+            lista_inserir(lista[i], item_criar(i, valorLista2, 4, 0));
         }
     }
+    return 0;
     for (int i = 0; i < operations; i++)
     {
         for (int j = 0; j < lista_tamanho(lista[i]); j++)
         {
-            item_imprimir_valor(lista_busca_ordenada(lista[j], i));
+            item_imprimir_valor(lista_busca_sequencial(lista[j], i));
             printf("\n");
         }
     }
+    return 0;
 }
-
 boolean lista_vazia(const LISTA *lista)
 {
     if (lista != NULL)
