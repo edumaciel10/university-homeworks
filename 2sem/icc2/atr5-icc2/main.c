@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 int shellSort(int v[], int n)
 {
   int count = 0;
@@ -32,7 +32,7 @@ int shellSort(int v[], int n)
             v[j + gap] = v[j];
             count++;
 
-            j = -gap;
+            j -= gap;
           }
           else
           {
@@ -102,39 +102,28 @@ int quickSort(int array[], int arraySize)
 
 void compareMethods(int array[], int arraySize)
 {
-  int duplicatedArray[arraySize];
+  int shellArray[arraySize];
+  int quickArray[arraySize];
   for (int i = 0; i < arraySize; i++)
   {
-    duplicatedArray[i] = array[i];
+    shellArray[i] = array[i];
+    quickArray[i] = array[i];
   }
 
-  // int shellOperations = shellSort(array, arraySize);
-  // printf("\n");
-  // for (int i = 0; i < arraySize; i++)
-  // {
-  //   printf(" %d ", array[i]);
-  // }
-  // printf("\n");
-  int quickOperations = quickSort(duplicatedArray, arraySize);
-
-  printf("\n quick = %d arraySize = %d", quickOperations, arraySize);
-  printf("\n");
-  for (int i = 0; i < arraySize; i++)
+  int shellOperations = shellSort(shellArray, arraySize);
+  int quickOperations = quickSort(quickArray, arraySize);
+  if (quickOperations < shellOperations)
   {
-    printf(" %d ", duplicatedArray[i]);
+    printf("Q ");
   }
-  // if (quickOperations < shellOperations)
-  // {
-  //   printf("Q ");
-  // }
-  // if (shellOperations < quickOperations)
-  // {
-  //   printf("S ");
-  // }
-  // if (shellOperations == quickOperations)
-  // {
-  //   printf("- ");
-  // }
+  if (shellOperations < quickOperations)
+  {
+    printf("S ");
+  }
+  if (shellOperations == quickOperations)
+  {
+    printf("- ");
+  }
 }
 
 int main()
@@ -146,20 +135,21 @@ int main()
   {
     scanf("%d", &array[i]);
   }
-  int *tempArray = (int *)malloc(1 * sizeof(int));
+  int *tempArray = (int *)malloc((1) * sizeof(int));
 
   for (int i = 0; i < arraySize; i++)
   {
-    tempArray[i] = array[i];
-    compareMethods(tempArray, i + 1);
-    if (i + 1 < arraySize)
+    for (int j = 0; j < i + 1; j++)
     {
-      tempArray = (int *)realloc(tempArray, (i + 1) * sizeof(int));
+      tempArray[j] = array[j];
     }
-    // continue;
-    // compareMethods(tempArray, i + 1);
+    compareMethods(tempArray, i + 1);
+    free(tempArray);
+    tempArray = NULL;
+    tempArray = (int *)malloc((i + 1) * sizeof(int));
   }
-
+  // free(array);
+  // free(tempArray);
   return 0;
 }
 // A ideia deste método é ver qual fez menos operações para printar.
