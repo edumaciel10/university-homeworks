@@ -8,9 +8,10 @@ struct item_st
     int chave;   // like a primary key
     int valor;   // real value on int
     int tamanho; // length of valor
+    int isBool;  // length of valor
 };
 
-ITEM *item_criar(int chave, int valor, int tamanho)
+ITEM *item_criar(int chave, int valor, int tamanho, int isBool)
 {
     ITEM *item;
 
@@ -21,6 +22,7 @@ ITEM *item_criar(int chave, int valor, int tamanho)
         item->chave = chave;
         item->valor = valor;
         item->tamanho = tamanho;
+        item->isBool = isBool;
         return item;
     }
     return NULL;
