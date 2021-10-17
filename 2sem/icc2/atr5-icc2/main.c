@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 int shellSort(int v[], int n)
 {
   int count = 0;
@@ -69,9 +70,9 @@ int _quick(int array[], int init, int final, int count)
       count++;
       indexOfInit++;
     }
-    count++;
 
-    while (array[indexOfFinal] > pivot)
+    count++;
+    while (indexOfFinal > 0 && array[indexOfFinal] > pivot)
     {
       count++;
       indexOfFinal--;
@@ -102,8 +103,8 @@ int quickSort(int array[], int arraySize)
 
 void compareMethods(int array[], int arraySize)
 {
-  int shellArray[arraySize];
-  int quickArray[arraySize];
+  int *shellArray = (int *)malloc(arraySize * sizeof(int));
+  int *quickArray = (int *)malloc(arraySize * sizeof(int));
   for (int i = 0; i < arraySize; i++)
   {
     shellArray[i] = array[i];
@@ -124,17 +125,23 @@ void compareMethods(int array[], int arraySize)
   {
     printf("- ");
   }
+  free(shellArray);
+  free(quickArray);
+  shellArray = NULL;
+  quickArray = NULL;
 }
 
 int main()
 {
   int arraySize = 0;
-  scanf("%d", &arraySize);            // 4
+  scanf("%d", &arraySize); // 4
+
   int array[arraySize];               // array[4]
   for (int i = 0; i < arraySize; i++) // [3 6 5 2 ]
   {
     scanf("%d", &array[i]);
   }
+
   int *tempArray = (int *)malloc((1) * sizeof(int));
 
   for (int i = 0; i < arraySize; i++)
