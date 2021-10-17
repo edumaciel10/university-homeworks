@@ -50,54 +50,64 @@ int shellSort(int v[], int n)
   return count;
 }
 
-int _quick(int array[], int init, int final, int count)
+int quick(int *vector, int leftIndex, int rightIndex)
 {
-  if (init >= final)
-  {
-    return count;
-  }
-  int indexOfPivot = (init + final) / 2;
-  int pivot = array[indexOfPivot];
-  int indexOfInit = init;
-  int indexOfFinal = final;
-  int aux = 0;
-  while (1)
-  {
-    count++;
+  int operations = 0;
 
-    while (array[indexOfInit] < pivot)
+  if (leftIndex < rightIndex)
+  {
+
+    int pivot = vector[(int)((rightIndex + leftIndex) / 2)];
+    operations++;
+
+    int left = leftIndex, right = rightIndex;
+
+    while (1)
     {
-      count++;
-      indexOfInit++;
+
+      operations++;
+      while (vector[left] < pivot)
+      {
+        left++;
+        operations++;
+      }
+
+      operations++;
+      while (vector[right] > pivot)
+      {
+        right--;
+        operations++;
+      }
+
+      if (left < right)
+      {
+        int tmp = vector[left];
+
+        operations++;
+        vector[left] = vector[right];
+
+        operations++;
+        vector[right] = tmp;
+
+        operations++;
+        left++;
+        right--;
+      }
+      else
+      {
+        break;
+      }
     }
 
-    count++;
-    while (indexOfFinal > 0 && array[indexOfFinal] > pivot)
-    {
-      count++;
-      indexOfFinal--;
-    }
-    if (indexOfFinal <= indexOfInit)
-    {
-      break;
-    }
-    aux = array[indexOfInit];
-    count++;
-    array[indexOfInit] = array[indexOfFinal];
-    count++;
-    array[indexOfFinal] = aux;
-    count++;
-    indexOfInit++;
-    indexOfFinal--;
+    operations += quick(vector, leftIndex, right);
+    operations += quick(vector, right + 1, rightIndex);
   }
-  count += _quick(array, init, indexOfFinal, 0);
-  count += _quick(array, indexOfFinal + 1, final, 0);
-  return count;
+
+  return operations;
 }
-
 int quickSort(int array[], int arraySize)
 {
-  int count = _quick(array, 0, arraySize - 1, 0);
+  int count = quick(array, 0, arraySize - 1);
   return count;
 }
 
@@ -155,13 +165,6 @@ int main()
     tempArray = NULL;
     tempArray = (int *)malloc((i + 1) * sizeof(int));
   }
-  // free(array);
-  // free(tempArray);
+  free(tempArray);
   return 0;
 }
-// A ideia deste método é ver qual fez menos operações para printar.
-// Ai você coloca a quantidade de operações dentro do programa
-// a unica coisa que você vai alterar é o metodo ShellSort, ok?
-// Faça um programa em C que leia o número N de elementos de um vetor V. Após isso, leia os N elementos de V. O programa deve ordenar todos os subvetores de V utilizando os métodos Shell Sort e Quick Sort. Para cada subvetor de V, deve-se imprimir qual método fez menos operações (comparação + cópias), imprimindo Q quando for o Quick Sort, S quando for o Shell Sort e o caractere hífen quando o número de contagens for igual. O Shell deve utilizar os gaps no formato 2^k - 1, e o Quick Sort deve utilizar o elemento do meio como pivô (como os códigos vistos em aula).
-
-// Por exemplo, considere o seguinte vetor V: [3, 6, 5, 2]. Os subvetores de V são: V1: [3], V2: [3, 6], V3: [3, 6, 5], e V4 = [3, 6, 5, 2]. Para V1, o número de operações é o mesmo para os dois métodos. Para V2, V3 e V4, o Shell Sort realiza menos operações. Portanto, seu programa deve imprimir: - S S S
