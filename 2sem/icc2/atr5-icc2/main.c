@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int shellSort(int v[], int n)
 {
@@ -32,7 +33,7 @@ int shellSort(int v[], int n)
             v[j + gap] = v[j];
             count++;
 
-            j = -gap;
+            j -= gap;
           }
           else
           {
@@ -69,9 +70,9 @@ int _quick(int array[], int init, int final, int count)
       count++;
       indexOfInit++;
     }
-    count++;
 
-    while (array[indexOfFinal] > pivot)
+    count++;
+    while (indexOfFinal > 0 && array[indexOfFinal] > pivot)
     {
       count++;
       indexOfFinal--;
@@ -102,64 +103,60 @@ int quickSort(int array[], int arraySize)
 
 void compareMethods(int array[], int arraySize)
 {
-  int duplicatedArray[arraySize];
+  int *shellArray = (int *)malloc(arraySize * sizeof(int));
+  int *quickArray = (int *)malloc(arraySize * sizeof(int));
   for (int i = 0; i < arraySize; i++)
   {
-    duplicatedArray[i] = array[i];
+    shellArray[i] = array[i];
+    quickArray[i] = array[i];
   }
 
-  // int shellOperations = shellSort(array, arraySize);
-  // printf("\n");
-  // for (int i = 0; i < arraySize; i++)
-  // {
-  //   printf(" %d ", array[i]);
-  // }
-  // printf("\n");
-  int quickOperations = quickSort(duplicatedArray, arraySize);
-
-  printf("\n quick = %d arraySize = %d", quickOperations, arraySize);
-  printf("\n");
-  for (int i = 0; i < arraySize; i++)
+  int shellOperations = shellSort(shellArray, arraySize);
+  int quickOperations = quickSort(quickArray, arraySize);
+  if (quickOperations < shellOperations)
   {
-    printf(" %d ", duplicatedArray[i]);
+    printf("Q ");
   }
-  // if (quickOperations < shellOperations)
-  // {
-  //   printf("Q ");
-  // }
-  // if (shellOperations < quickOperations)
-  // {
-  //   printf("S ");
-  // }
-  // if (shellOperations == quickOperations)
-  // {
-  //   printf("- ");
-  // }
+  if (shellOperations < quickOperations)
+  {
+    printf("S ");
+  }
+  if (shellOperations == quickOperations)
+  {
+    printf("- ");
+  }
+  free(shellArray);
+  free(quickArray);
+  shellArray = NULL;
+  quickArray = NULL;
 }
 
 int main()
 {
   int arraySize = 0;
-  scanf("%d", &arraySize);            // 4
+  scanf("%d", &arraySize); // 4
+
   int array[arraySize];               // array[4]
   for (int i = 0; i < arraySize; i++) // [3 6 5 2 ]
   {
     scanf("%d", &array[i]);
   }
-  int *tempArray = (int *)malloc(1 * sizeof(int));
+
+  int *tempArray = (int *)malloc((1) * sizeof(int));
 
   for (int i = 0; i < arraySize; i++)
   {
-    tempArray[i] = array[i];
-    compareMethods(tempArray, i + 1);
-    if (i + 1 < arraySize)
+    for (int j = 0; j < i + 1; j++)
     {
-      tempArray = (int *)realloc(tempArray, (i + 1) * sizeof(int));
+      tempArray[j] = array[j];
     }
-    // continue;
-    // compareMethods(tempArray, i + 1);
+    compareMethods(tempArray, i + 1);
+    free(tempArray);
+    tempArray = NULL;
+    tempArray = (int *)malloc((i + 1) * sizeof(int));
   }
-
+  // free(array);
+  // free(tempArray);
   return 0;
 }
 // A ideia deste método é ver qual fez menos operações para printar.
