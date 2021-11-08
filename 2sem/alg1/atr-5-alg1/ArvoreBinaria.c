@@ -4,7 +4,7 @@
 
 struct node_st
 {
-    ITEM *item;
+    CLIENTE *cliente;
     NODE *direita;
     NODE *esquerda;
 };
@@ -28,7 +28,7 @@ ARVORE_BINARIA *arvore_binaria_criar()
 
 static void pre_ordem_recursao(NODE *raiz) {
     if (raiz != NULL) {
-        item_imprimir(raiz->item);
+        cliente_imprimir(raiz->cliente);
         pre_ordem_recursao(raiz->esquerda);
         pre_ordem_recursao(raiz->direita);
     }
@@ -37,7 +37,7 @@ static void pre_ordem_recursao(NODE *raiz) {
 static void em_ordem_recursao(NODE *raiz) {
     if (raiz != NULL) {
         pre_ordem_recursao(raiz->esquerda);
-        item_imprimir(raiz->item);
+        cliente_imprimir(raiz->cliente);
         pre_ordem_recursao(raiz->direita);
     }
 }
@@ -46,7 +46,7 @@ static void pos_ordem_recursao(NODE *raiz) {
     if (raiz != NULL) {
         pre_ordem_recursao(raiz->esquerda);
         pre_ordem_recursao(raiz->direita);
-        item_imprimir(raiz->item);
+        cliente_imprimir(raiz->cliente);
     }
 }
 
@@ -65,12 +65,12 @@ void arvore_binaria_pos_ordem(ARVORE_BINARIA *arvoreBinaria)
     pos_ordem_recursao(arvoreBinaria->raiz);
 }
 
-NODE * ab_cria_no(ITEM *item)
+NODE * ab_cria_no(CLIENTE *cliente)
 {
     NODE * novo_no;
     novo_no = (NODE *) malloc(sizeof(NODE));
     if (novo_no != NULL) {
-        novo_no->item = item;
+        novo_no->cliente = cliente;
         novo_no->direita = NULL;
         novo_no->esquerda = NULL;
     }
@@ -117,11 +117,11 @@ NODE * ab_inserir_no(NODE *raiz, ITEM *item)
 //     return raiz;
 // }
 
-boolean ab_inserir(ARVORE_BINARIA *T, ITEM *item){
+boolean ab_inserir(ARVORE_BINARIA *T, CLIENTE *cliente){
     if (T->raiz == NULL)
-        return((T->raiz = ab_cria_no(item)) != NULL);
+        return((T->raiz = ab_cria_no(cliente)) != NULL);
     else
-        return((T->raiz = ab_inserir_no(T->raiz, item)) != NULL);
+        return((T->raiz = binary_tree_insert(T->raiz, cliente)) != NULL);
 }
 
 
