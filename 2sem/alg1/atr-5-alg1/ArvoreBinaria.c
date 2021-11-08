@@ -76,46 +76,41 @@ NODE * ab_cria_no(CLIENTE *cliente)
     }
     return novo_no;
 }
-NODE * ab_inserir_no(NODE *raiz, ITEM *item)
+boolean no_checa_duplicado(NODE *raiz, CLIENTE *cliente)
 {
-    if (raiz == NULL) {
-        raiz = ab_cria_no(item);
-    } else {
-        if(item_comparar(item, raiz->esquerda->item) ==0 ||
-            item_comparar(item, raiz->direita->item) ==0){
-                return NULL;
+    if (cliente_comparar(raiz->cliente, cliente) == 0) {
+        return TRUE;
+    }
+    if(raiz->esquerda != NULL) {
+        if (cliente_comparar(raiz->esquerda->cliente, cliente) == 0) {
+            return TRUE;
         }
-        if (item_comparar(item, raiz->item) < 0) {
-            raiz->esquerda = ab_inserir_no(raiz->esquerda, item);
-        } else {
-            raiz->direita = ab_inserir_no(raiz->direita, item);
+    }
+    if(raiz->direita != NULL) {
+        if (cliente_comparar(raiz->direita->cliente, cliente) == 0) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+NODE * binary_tree_insert(NODE *raiz, CLIENTE *cliente)
+{
+    if(raiz == NULL) {
+        raiz = ab_cria_no(cliente);
+    } else {
+        if(cliente_comparar(raiz->cliente, cliente) < 0) {
+            raiz->esquerda = binary_tree_insert(raiz->esquerda, cliente);
+        } else if(cliente_comparar(raiz->cliente, cliente) > 0) {
+            raiz->direita = binary_tree_insert(raiz->direita, cliente);
+        }
+        else {
+            return raiz;
         }
     }
     return raiz;
 }
-// NODE *ab_inserir_no(NODE *raiz, ITEM *item, int lado, int chave) {
-//     if (raiz != NULL) {
-//         raiz->esquerda = ab_inserir_no(raiz->esquerda, item, lado, chave);
-//         raiz->direita = ab_inserir_no(raiz->direita, item, lado, chave);
-//         if (chave == item_get_chave(raiz->item)){
-//             if (lado == FILHO_ESQ)
-//             {
-//                 if(raiz->esquerda == NULL)
-//                 {
-//                     raiz->esquerda = ab_cria_no(item);
-//                 }
-//             }
-//             else if (lado == FILHO_DIR)
-//             {
-//                 if(raiz->direita == NULL)
-//                 {
-//                     raiz->direita = ab_cria_no(item);
-//                 }
-//             }
-//         }
-//     }
-//     return raiz;
-// }
+
 
 boolean ab_inserir(ARVORE_BINARIA *T, CLIENTE *cliente){
     if (T->raiz == NULL)
