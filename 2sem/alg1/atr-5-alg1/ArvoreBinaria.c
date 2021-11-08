@@ -4,7 +4,7 @@
 
 struct node_st
 {
-    ITEM *item;
+    CLIENTE *cliente;
     NODE *direita;
     NODE *esquerda;
 };
@@ -28,7 +28,7 @@ ARVORE_BINARIA *arvore_binaria_criar()
 
 static void pre_ordem_recursao(NODE *raiz) {
     if (raiz != NULL) {
-        item_imprimir(raiz->item);
+        cliente_imprimir(raiz->cliente);
         pre_ordem_recursao(raiz->esquerda);
         pre_ordem_recursao(raiz->direita);
     }
@@ -37,7 +37,7 @@ static void pre_ordem_recursao(NODE *raiz) {
 static void em_ordem_recursao(NODE *raiz) {
     if (raiz != NULL) {
         pre_ordem_recursao(raiz->esquerda);
-        item_imprimir(raiz->item);
+        cliente_imprimir(raiz->cliente);
         pre_ordem_recursao(raiz->direita);
     }
 }
@@ -46,7 +46,7 @@ static void pos_ordem_recursao(NODE *raiz) {
     if (raiz != NULL) {
         pre_ordem_recursao(raiz->esquerda);
         pre_ordem_recursao(raiz->direita);
-        item_imprimir(raiz->item);
+        cliente_imprimir(raiz->cliente);
     }
 }
 
@@ -65,63 +65,58 @@ void arvore_binaria_pos_ordem(ARVORE_BINARIA *arvoreBinaria)
     pos_ordem_recursao(arvoreBinaria->raiz);
 }
 
-NODE * ab_cria_no(ITEM *item)
+NODE * ab_cria_no(CLIENTE *cliente)
 {
     NODE * novo_no;
     novo_no = (NODE *) malloc(sizeof(NODE));
     if (novo_no != NULL) {
-        novo_no->item = item;
+        novo_no->cliente = cliente;
         novo_no->direita = NULL;
         novo_no->esquerda = NULL;
     }
     return novo_no;
 }
-NODE * ab_inserir_no(NODE *raiz, ITEM *item)
+boolean no_checa_duplicado(NODE *raiz, CLIENTE *cliente)
 {
-    if (raiz == NULL) {
-        raiz = ab_cria_no(item);
-    } else {
-        if(item_comparar(item, raiz->esquerda->item) ==0 ||
-            item_comparar(item, raiz->direita->item) ==0){
-                return NULL;
+    if (cliente_comparar(raiz->cliente, cliente) == 0) {
+        return TRUE;
+    }
+    if(raiz->esquerda != NULL) {
+        if (cliente_comparar(raiz->esquerda->cliente, cliente) == 0) {
+            return TRUE;
         }
-        if (item_comparar(item, raiz->item) < 0) {
-            raiz->esquerda = ab_inserir_no(raiz->esquerda, item);
-        } else {
-            raiz->direita = ab_inserir_no(raiz->direita, item);
+    }
+    if(raiz->direita != NULL) {
+        if (cliente_comparar(raiz->direita->cliente, cliente) == 0) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+NODE * binary_tree_insert(NODE *raiz, CLIENTE *cliente)
+{
+    if(raiz == NULL) {
+        raiz = ab_cria_no(cliente);
+    } else {
+        if(cliente_comparar(raiz->cliente, cliente) < 0) {
+            raiz->esquerda = binary_tree_insert(raiz->esquerda, cliente);
+        } else if(cliente_comparar(raiz->cliente, cliente) > 0) {
+            raiz->direita = binary_tree_insert(raiz->direita, cliente);
+        }
+        else {
+            return raiz;
         }
     }
     return raiz;
 }
-// NODE *ab_inserir_no(NODE *raiz, ITEM *item, int lado, int chave) {
-//     if (raiz != NULL) {
-//         raiz->esquerda = ab_inserir_no(raiz->esquerda, item, lado, chave);
-//         raiz->direita = ab_inserir_no(raiz->direita, item, lado, chave);
-//         if (chave == item_get_chave(raiz->item)){
-//             if (lado == FILHO_ESQ)
-//             {
-//                 if(raiz->esquerda == NULL)
-//                 {
-//                     raiz->esquerda = ab_cria_no(item);
-//                 }
-//             }
-//             else if (lado == FILHO_DIR)
-//             {
-//                 if(raiz->direita == NULL)
-//                 {
-//                     raiz->direita = ab_cria_no(item);
-//                 }
-//             }
-//         }
-//     }
-//     return raiz;
-// }
 
-boolean ab_inserir(ARVORE_BINARIA *T, ITEM *item){
+
+boolean ab_inserir(ARVORE_BINARIA *T, CLIENTE *cliente){
     if (T->raiz == NULL)
-        return((T->raiz = ab_cria_no(item)) != NULL);
+        return((T->raiz = ab_cria_no(cliente)) != NULL);
     else
-        return((T->raiz = ab_inserir_no(T->raiz, item)) != NULL);
+        return((T->raiz = binary_tree_insert(T->raiz, cliente)) != NULL);
 }
 
 

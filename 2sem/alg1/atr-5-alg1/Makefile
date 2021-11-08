@@ -1,4 +1,4 @@
-UTIL=Item.c ArvoreBinaria.c
+UTIL=Cliente.c ArvoreBinaria.c
 MAIN=mainArvore.c
 BINARY=atr
 

@@ -1,7 +1,7 @@
 #ifndef TADGENERICO_ARVOREBINARIA_H
 #define TADGENERICO_ARVOREBINARIA_H
 
-#include "Item.h"
+#include "Cliente.h"
 
 #define FILHO_ESQ 0
 #define FILHO_DIR 1
@@ -13,7 +13,7 @@ ARVORE_BINARIA *arvore_binaria_criar();
 void arvore_binaria_pre_ordem(ARVORE_BINARIA *arvoreBinaria);
 void arvore_binaria_em_ordem(ARVORE_BINARIA *arvoreBinaria);
 void arvore_binaria_pos_ordem(ARVORE_BINARIA *arvoreBinaria);
-boolean ab_inserir(ARVORE_BINARIA *T, ITEM *item);
-NODE * ab_inserir_no(NODE *raiz, ITEM *item);
+boolean ab_inserir(ARVORE_BINARIA *T, CLIENTE *cliente);
+NODE * ab_inserir_no(NODE *raiz, CLIENTE *cliente);
 
 #endif //TADGENERICO_ARVOREBINARIA_H
