@@ -97,16 +97,9 @@ int item_comparar(const ITEM *item1, const ITEM *item2)
 {
     if (item1 != NULL && item2 != NULL)
     {
-        if (item1->chave == item2->chave)
-        {
-            return 0;
-        }
-        else if (item1->chave < item2->chave)
-        {
+        if (item1->chave < item2->chave) {
             return -1;
-        }
-        else
-        {
+        } else {
             return 1;
         }
     }

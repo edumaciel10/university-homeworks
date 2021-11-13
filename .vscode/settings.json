@@ -28,7 +28,10 @@
     "tuple": "c",
     "lista.h": "c",
     "item.h": "c",
-    "util.h": "c"
+    "util.h": "c",
+    "initializer_list": "c",
+    "utility": "c",
+    "cliente.h": "c"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }

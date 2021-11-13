@@ -8,7 +8,7 @@ struct cliente_st
     long chave;// CPF em int
     char nome[50];
     int idade;
-    int saldo;
+    float saldo;
 };
 
 CLIENTE *cliente_criar_vazio()
@@ -19,7 +19,7 @@ CLIENTE *cliente_criar_vazio()
     return cliente;
 }
 
-CLIENTE *cliente_criar (long chave, char *nome, int idade, int saldo)
+CLIENTE *cliente_criar (long chave, char *nome, int idade, float saldo)
 {
     CLIENTE *cliente;
 
@@ -57,22 +57,11 @@ int cliente_get_chave(const CLIENTE *cliente)
     return ERRO;
 }
 
-
-boolean cliente_set_chave(CLIENTE *cliente, long chave)
-{
-    if (cliente != NULL){
-        cliente->chave = chave;
-        return TRUE;
-    }
-    return FALSE;
-}
-
-
 void cliente_imprimir(const CLIENTE *cliente)
 {
     if (cliente != NULL)
     {
-        printf("\nchave: %ld", cliente->chave);
+        printf("%ld\n", cliente->chave);
     }
 }
 
@@ -84,9 +73,9 @@ int cliente_comparar(const CLIENTE *cliente1, const CLIENTE *cliente2)
         {
             return 0;
         }
-        else if (cliente1->chave > cliente2->chave)
+        else if (cliente1->chave < cliente2->chave)
         {
-            return -1; // esquerda
+            return -1;
         }
         else
         {
@@ -95,13 +84,38 @@ int cliente_comparar(const CLIENTE *cliente1, const CLIENTE *cliente2)
     }
     return ERRO;
 }
-void cliente_imprimir_verboso(const CLIENTE *cliente)
+long cliente_ler_chave_input(char chave[13]) {
+    char chave_concat[13] = "";
+    strcpy(chave_concat, " ");
+    char *pointer = strtok(chave, ".");
+    strcat(chave_concat, pointer);
+    pointer = strtok(NULL, ".");
+    strcat(chave_concat, pointer);
+    pointer = strtok(NULL, "-");
+    strcat(chave_concat, pointer);
+    pointer = strtok(NULL, "");
+    strcat(chave_concat, pointer);
+    return atol(chave_concat);
+}
+
+CLIENTE *cliente_ler_stdin()
 {
-    if (cliente != NULL)
-    {
-        printf("\nchave: %ld", cliente->chave);
-        printf("\nnome: %s", cliente->nome);
-        printf("\nidade: %d", cliente->idade);
-        printf("\nsaldo: %d\n", cliente->saldo);
-    }
+    char *chave_char = malloc(sizeof(char));
+    char nome[50];
+    int idade;
+    float saldo;
+    char *line = readLine();
+    char *pointer = strtok(line, ";");
+    sprintf(chave_char, "%s", pointer);
+    pointer = strtok(NULL, ";");
+    strcpy(nome, pointer);
+    pointer = strtok(NULL, ";");
+    idade = atoi(pointer);
+    pointer = strtok(NULL, "\n");
+    saldo = atof(pointer);
+    long chave = cliente_ler_chave_input(chave_char);
+    CLIENTE *cliente = cliente_criar(chave, nome, idade, saldo);
+    free(chave_char);
+    free(line);
+    return cliente;
 }
