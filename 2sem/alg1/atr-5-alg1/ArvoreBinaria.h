@@ -18,6 +18,7 @@ NODE * ab_cria_no(CLIENTE *cliente);
 boolean no_checa_duplicado(NODE *raiz, CLIENTE *cliente);
 boolean ab_inserir(ARVORE_BINARIA *T, CLIENTE *cliente);
 NODE * ab_inserir_no(NODE *raiz, CLIENTE *cliente);
-
+boolean ab_apagar_no(NODE *raiz);
+boolean ab_apagar (ARVORE_BINARIA **T);
 
 #endif //TADGENERICO_ARVOREBINARIA_H
