@@ -12,7 +12,6 @@ struct node_st
 struct arvore_binaria
 {
     NODE* raiz;
-    int profundidade;
 };
 
 ARVORE_BINARIA *arvore_binaria_criar()
@@ -21,7 +20,6 @@ ARVORE_BINARIA *arvore_binaria_criar()
     arvore = (ARVORE_BINARIA *) malloc(sizeof(ARVORE_BINARIA));
     if (arvore != NULL) {
         arvore->raiz = NULL;
-        arvore->profundidade = -1;
     }
     return arvore;
 }
@@ -80,42 +78,17 @@ NODE * ab_inserir_no(NODE *raiz, ITEM *item)
 {
     if (raiz == NULL) {
         raiz = ab_cria_no(item);
+        return raiz;
+    } 
+    cliente_imprimir_verboso(raiz->item);
+    cliente_imprimir_verboso(item);
+    if (item_comparar(raiz->item,item ) < 0) {
+        raiz->esquerda = ab_inserir_no(raiz->esquerda, item);
     } else {
-        if(item_comparar(item, raiz->esquerda->item) ==0 ||
-            item_comparar(item, raiz->direita->item) ==0){
-                return NULL;
-        }
-        if (item_comparar(item, raiz->item) < 0) {
-            raiz->esquerda = ab_inserir_no(raiz->esquerda, item);
-        } else {
-            raiz->direita = ab_inserir_no(raiz->direita, item);
-        }
+        raiz->direita = ab_inserir_no(raiz->direita, item);
     }
     return raiz;
 }
-// NODE *ab_inserir_no(NODE *raiz, ITEM *item, int lado, int chave) {
-//     if (raiz != NULL) {
-//         raiz->esquerda = ab_inserir_no(raiz->esquerda, item, lado, chave);
-//         raiz->direita = ab_inserir_no(raiz->direita, item, lado, chave);
-//         if (chave == item_get_chave(raiz->item)){
-//             if (lado == FILHO_ESQ)
-//             {
-//                 if(raiz->esquerda == NULL)
-//                 {
-//                     raiz->esquerda = ab_cria_no(item);
-//                 }
-//             }
-//             else if (lado == FILHO_DIR)
-//             {
-//                 if(raiz->direita == NULL)
-//                 {
-//                     raiz->direita = ab_cria_no(item);
-//                 }
-//             }
-//         }
-//     }
-//     return raiz;
-// }
 
 boolean ab_inserir(ARVORE_BINARIA *T, ITEM *item){
     if (T->raiz == NULL)
@@ -123,6 +96,3 @@ boolean ab_inserir(ARVORE_BINARIA *T, ITEM *item){
     else
         return((T->raiz = ab_inserir_no(T->raiz, item)) != NULL);
 }
-
-
-

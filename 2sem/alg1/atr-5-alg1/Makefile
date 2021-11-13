@@ -1,4 +1,4 @@
-UTIL=Cliente.c ArvoreBinaria.c
+UTIL=Cliente.c ArvoreBinaria.c Util.c
 MAIN=mainArvore.c
 BINARY=atr
 
@@ -13,6 +13,9 @@ debug:
 
 valgrind:
 	valgrind --tool=memcheck --leak-check=full  --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BINARY)
+
+zip:
+	@zip -r atr.zip *
 
 clean:
 	@rm *.o
