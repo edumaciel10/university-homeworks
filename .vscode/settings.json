@@ -31,7 +31,8 @@
     "util.h": "c",
     "initializer_list": "c",
     "utility": "c",
-    "cliente.h": "c"
+    "cliente.h": "c",
+    "arvorebinaria.h": "c"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }

@@ -23,7 +23,8 @@ int main()
         ab_inserir(arvoreBinaria, cliente);
         arvore_binaria_pre_ordem(arvoreBinaria);
     }else if(strcmp(k,"R") ==0) {
-        //remover
+        char *cpf = readLine();
+        arvore_binaria_deletar(arvoreBinaria, cpf);
     }else if(strcmp(k,"B") ==0) {
         char *CPF = readLine();
         arvore_binaria_buscar(arvoreBinaria, CPF);
