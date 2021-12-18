@@ -1,0 +1,3 @@
+gcc -Wall -Werror -Wextra -g main.c -o atr
+./atr
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 

@@ -20,5 +20,5 @@ int cliente_comparar(const CLIENTE *cliente1, const CLIENTE *cliente2);
 long cliente_ler_chave_input(char chave[13]);
 void cliente_imprimir_verboso(const CLIENTE *cliente);
 int cliente_comparar_chave(const CLIENTE *cliente, long chave);
-
+char *cliente_ler_cpf();
 #endif //TADGENERICO_cliente_H

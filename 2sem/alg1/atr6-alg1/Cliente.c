@@ -61,7 +61,7 @@ void cliente_imprimir(const CLIENTE *cliente)
 {
     if (cliente != NULL)
     {
-        printf("%ld\n", cliente->chave);
+        printf("%011ld\n", cliente->chave);
     }
 }
 
@@ -70,13 +70,12 @@ void cliente_imprimir_verboso(const CLIENTE *cliente) {
         char CPF[13];
         sprintf(CPF, "%ld", cliente->chave);
         
-        char *copy = malloc(strlen(CPF));
-        // get the last 3 digits
-        // printf("CHAVE :: %s.%s.%s-%s\n", strncpy(copy,CPF, 3),strncpy(CPF,copy+4, 3),strncpy(copy,CPF+7, 3),strncpy(copy,CPF+10, 2));
+        char *dest = malloc(strlen(CPF));
         printf("Conta :: %s\n", cliente->nome);
-        printf("CHAVE :: %s.%s\n",  strncpy(copy, CPF, 3),strncpy(copy, CPF+3, 6)); // TODO: imrpove this
+        printf("CPF :: %s.%s.%s-%s\n", strncpy(dest,CPF, 3), strncpy(dest+4,CPF+3, 3), strncpy(dest+8,CPF+6, 3), strncpy(dest+12,CPF+9, 2));
         printf("Idade :: %d\n", cliente->idade);
-        printf("Saldo atual :: %.2f\n",cliente->saldo);
+        printf("Saldo atual :: R$ %.2f\n",cliente->saldo);
+        free(dest);
     }
 }
 
@@ -154,4 +153,19 @@ CLIENTE *cliente_ler_stdin()
     free(chave_char);
     free(line);
     return cliente;
+}
+
+char *cliente_ler_cpf() {
+    char *line = readLine();
+    char *pointer = strtok(line, ".");
+    char *cpf = malloc(sizeof(char)*13);
+    strcpy(cpf, pointer);
+    pointer = strtok(NULL, ".");
+    strcat(cpf, pointer);
+    pointer = strtok(NULL, "-");
+    strcat(cpf, pointer);
+    pointer = strtok(NULL, "");
+    strcat(cpf, pointer);
+    free(line);
+    return cpf;
 }

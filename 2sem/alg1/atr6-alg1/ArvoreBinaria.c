@@ -33,38 +33,10 @@ static void pre_ordem_recursao(NODE *raiz) {
     }
 }
 
-static void em_ordem_recursao(NODE *raiz) {
-    if (raiz != NULL) {
-        em_ordem_recursao(raiz->esquerda);
-        cliente_imprimir(raiz->cliente);
-        em_ordem_recursao(raiz->direita);
-    }
-}
-
-static void pos_ordem_recursao(NODE *raiz) {
-    if (raiz != NULL) {
-        pos_ordem_recursao(raiz->esquerda);
-        pos_ordem_recursao(raiz->direita);
-        cliente_imprimir(raiz->cliente);
-    }
-}
-
 void arvore_binaria_pre_ordem(ARVORE_BINARIA *arvoreBinaria)
 {
-    printf("\nPreorder\n");
+    printf("Preorder\n");
     pre_ordem_recursao(arvoreBinaria->raiz);
-}
-
-void arvore_binaria_em_ordem(ARVORE_BINARIA *arvoreBinaria)
-{
-    printf("Inorder\n");
-    em_ordem_recursao(arvoreBinaria->raiz);
-}
-
-void arvore_binaria_pos_ordem(ARVORE_BINARIA *arvoreBinaria)
-{
-    printf("\nPostorder\n");
-    pos_ordem_recursao(arvoreBinaria->raiz);
 }
 
 NODE * ab_cria_no(CLIENTE *cliente)
@@ -147,8 +119,8 @@ void arvore_binaria_buscar(ARVORE_BINARIA *arvore, char* CPF) {
     int encontrou = FALSE;
     long chave = cliente_ler_chave_input(CPF);
     while (atual != NULL) {
-        cliente_imprimir(atual->cliente);
-        printf("cliente_comparar(atual->cliente, cliente) == %d\n", cliente_comparar_chave(atual->cliente, chave));
+        // cliente_imprimir(atual->cliente);
+        // printf("cliente_comparar(atual->cliente, cliente) == %d\n", cliente_comparar_chave(atual->cliente, chave));
         if (cliente_comparar_chave(atual->cliente, chave) == 0) {
             encontrou = TRUE;
             break;
@@ -164,5 +136,75 @@ void arvore_binaria_buscar(ARVORE_BINARIA *arvore, char* CPF) {
     } else {
         printf("Cliente não encontrado");
     }
-    free(atual);
+}
+
+void arvore_binaria_deletar(ARVORE_BINARIA *arvore, char* CPF) {
+    NODE *atual = arvore->raiz;
+    NODE *pai = NULL;
+    int encontrou = FALSE;
+    long chave = cliente_ler_chave_input(CPF);
+    while (atual != NULL) {
+        if (cliente_comparar_chave(atual->cliente, chave) == 0) {
+            encontrou = TRUE;
+            break;
+        }
+        pai = atual;
+        if (cliente_comparar_chave(atual->cliente, chave) > 0) { // refatorar isso
+            atual = atual->esquerda;
+        } else if(cliente_comparar_chave(atual->cliente, chave) < 0) {
+            atual = atual->direita;
+        }
+    }
+    if ( encontrou == TRUE ) {
+        cliente_imprimir_verboso(atual->cliente);
+        if (atual->esquerda == NULL && atual->direita == NULL) {
+            if (pai == NULL) {
+                arvore->raiz = NULL;
+            } else {
+                if (pai->esquerda == atual) {
+                    pai->esquerda = NULL;
+                } else {
+                    pai->direita = NULL;
+                }
+            }
+        } else if (atual->esquerda == NULL) {
+            if (pai == NULL) {
+                arvore->raiz = atual->direita;
+            } else {
+                if (pai->esquerda == atual) {
+                    pai->esquerda = atual->direita;
+                } else {
+                    pai->direita = atual->direita;
+                }
+            }
+        } else if (atual->direita == NULL) {
+            if (pai == NULL) {
+                arvore->raiz = atual->esquerda;
+            } else {
+                if (pai->esquerda == atual) {
+                    pai->esquerda = atual->esquerda;
+                } else {
+                    pai->direita = atual->esquerda;
+                }
+            }
+        } else {
+            NODE *sucessor = atual->direita;
+            NODE *sucessor_pai = atual;
+            while (sucessor->esquerda != NULL) {
+                sucessor_pai = sucessor;
+                sucessor = sucessor->esquerda;
+            }
+            atual->cliente = sucessor->cliente;
+            if (sucessor_pai->esquerda == sucessor) {
+                sucessor_pai->esquerda = sucessor->direita;
+            } else {
+                sucessor_pai->direita = sucessor->direita;
+            }
+        }
+        arvore_binaria_pre_ordem(arvore);
+    } else {
+        printf("Cliente não encontrado");
+        return;
+    }
+    ab_apagar_no(pai);
 }
