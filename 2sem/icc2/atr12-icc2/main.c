@@ -1,4 +1,6 @@
-// Faça um programa em C que leia a quantidade de esquinas de ruas na horizontal (linhas) e quantidade de ruas na vertical (colunas). Após isso, leia os valores de cada rua, representada pelo par de IDs da rua, seguido da quantidade de amigos entre elas (veja exemplo abaixo). O seu programa deve imprimir o máximo de amigos que você vai conseguir cumprimentar durante o seu deslocamento entre o ponto A (ponto mais acima a esquerda) e o ponto B (ponto mais abaixo a direita).
+// Faça um programa em C que leia a quantidade de esquinas de ruas na horizontal (linhas) e quantidade de ruas na vertical (colunas).
+// Após isso, leia os valores de cada rua, representada pelo par de IDs da rua, seguido da quantidade de amigos entre elas (veja exemplo abaixo).
+// O seu programa deve imprimir o máximo de amigos que você vai conseguir cumprimentar durante o seu deslocamento entre o ponto A (ponto mais acima a esquerda) e o ponto B (ponto mais abaixo a direita).
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,6 +9,15 @@ int _caminho(int **cache,int **rua, int ponto, int passos, int x, int y, int SOM
     if(rua[ponto][0] == -1) { // cheguei no ultimo
         return 0;
     }
+
+    if(cache[ponto][0] != -1) {
+        return cache[ponto][0];
+    }
+
+    if(cache[ponto][1] != -1) {
+        return cache[ponto][1];
+    }
+
     int possoIrParaBaixo = 1, possoIrParaDireita = 1;
 
     if(rua[ponto][1] == -1) { // estou em uma das bordas
@@ -32,8 +43,10 @@ int _caminho(int **cache,int **rua, int ponto, int passos, int x, int y, int SOM
     }
 
     if(idaParaBaixo > idaParaDireita) { // retorna o caminho maior
+        cache[ponto][1] = idaParaBaixo;
         return idaParaBaixo;
     } else {
+        cache[ponto][0] = idaParaDireita;
         return idaParaDireita;
     }
 }
@@ -66,7 +79,7 @@ int main() {
     for(int i = 0; i<totalPontos; i++) {
         rua[i] = calloc(2, sizeof(int*));
     }
-
+    
     for(int i = 0; i < ESQUINAS_VERTICAIS; i++) {
         for(int j = 0; j < ESQUINAS_HORIZONTAIS; j++) {
             if(i < ESQUINAS_VERTICAIS-1 && j < ESQUINAS_HORIZONTAIS-1) {
