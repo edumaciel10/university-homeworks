@@ -79,7 +79,7 @@ int main() {
     for(int i = 0; i<totalPontos; i++) {
         rua[i] = calloc(2, sizeof(int*));
     }
-    
+
     for(int i = 0; i < ESQUINAS_VERTICAIS; i++) {
         for(int j = 0; j < ESQUINAS_HORIZONTAIS; j++) {
             if(i < ESQUINAS_VERTICAIS-1 && j < ESQUINAS_HORIZONTAIS-1) {
