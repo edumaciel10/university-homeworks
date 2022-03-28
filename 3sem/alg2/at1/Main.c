@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "Student.h"
 char *readLine()
 {
     char *string = NULL;
@@ -49,39 +49,47 @@ struct student {
   float grade;
 };
 
-
+void checkIfNeedToPrintSeparator(int isEndOfFile, int index, int finalIndex) {
+  if(!isEndOfFile && index <= finalIndex && index != 0) {
+    printf("\n");
+  }
+}
 void readAndShowAllStudents(FILE *arq) {
-  int size = countOfElementsOnFile(arq);
-  struct student *students = (struct student *)malloc(sizeof(struct student) * size); // can be createStudentsStruct(size);
+  int countOfElements = countOfElementsOnFile(arq);
+  struct student *students = (struct student *)malloc(sizeof(struct student) * countOfElements); // can be createStudentsStruct(size);
   fseek(arq, 0, SEEK_SET);
-  int i;
-  for (i = 0; i < size; i++) {
+  int i=0;
+
+  do {
     fread(&students[i].nusp  , sizeof(int  )     , 1, arq);
     fread(&students[i].name  , sizeof(char ) * 50, 1, arq);
     fread(&students[i].course, sizeof(char ) * 50, 1, arq);
     fread(&students[i].grade , sizeof(float)     , 1, arq);
-    printf("%d\n", students[i].nusp);
-    printf("%s\n", students[i].name);
-    printf("%s\n", students[i].course);
-    printf("%.2f\n", students[i].grade);
-  }
+    printStudent(&students[i]);
+    i++;
+    // printf("\n Condition: %d %d", !feof(arq), (i < interval));
+    checkIfNeedToPrintSeparator(feof(arq), i+1, countOfElements);
+  } while(!feof(arq) && (i < countOfElements ));
+
   free(students);
 }
 
 void readAndShowStartToMiddleStudents(FILE *arq) {
   int countOfElements = countOfElementsOnFile(arq)/2;
   struct student *students = (struct student *)malloc(sizeof(struct student) * countOfElements);
-  int i;
-  for (i = 0; i < countOfElements; i++) {
+  int i= 0;
+
+  do {
     fread(&students[i].nusp  , sizeof(int  )     , 1, arq);
     fread(&students[i].name  , sizeof(char ) * 50, 1, arq);
     fread(&students[i].course, sizeof(char ) * 50, 1, arq);
     fread(&students[i].grade , sizeof(float)     , 1, arq);
-    printf("%d\n", students[i].nusp); // can be printStudent(students[i]);
-    printf("%s\n", students[i].name);
-    printf("%s\n", students[i].course);
-    printf("%.2f\n", students[i].grade);
-  }
+    printStudent(&students[i]);
+    i++;
+    // printf("\n Condition: %d %d", !feof(arq), (i < interval));
+    checkIfNeedToPrintSeparator(feof(arq), i+1, countOfElements);
+  } while(!feof(arq) && (i < countOfElements ));
+
   free(students);
 }
 
@@ -89,27 +97,28 @@ void readAndShowMiddleToEndStudents(FILE *arq) {
   int countOfElements = countOfElementsOnFile(arq)/2;
   int fileSizeOfHalf = fsize(arq);
   struct student *students = (struct student *)malloc(sizeof(struct student) * countOfElements);
-  int i;
-  printf("Tamanho do arquivo: %d\n", fileSizeOfHalf);
+  int i= 0;
   fseek(arq, fileSizeOfHalf/2, SEEK_SET);
-  for (i = 0; i < countOfElements; i++) {
+
+  do {
     fread(&students[i].nusp  , sizeof(int  )     , 1, arq);
     fread(&students[i].name  , sizeof(char ) * 50, 1, arq);
     fread(&students[i].course, sizeof(char ) * 50, 1, arq);
     fread(&students[i].grade , sizeof(float)     , 1, arq);
-    printf("%d\n", students[i].nusp);
-    printf("%s\n", students[i].name);
-    printf("%s\n", students[i].course);
-    printf("%.2f\n", students[i].grade);
-  }
+    printStudent(&students[i]);
+    i++;
+    // printf("\n Condition: %d %d", !feof(arq), (i < interval));
+    checkIfNeedToPrintSeparator(feof(arq), i+1, countOfElements);
+  } while(!feof(arq) && (i < countOfElements ));
+
   free(students);
 }
+
 
 void readAndShowTheIntervalOfStudents(FILE *arq) {
   int start = 0;
   int end = 0;
   scanf("%d %d", &start, &end);
-  printf("%d %d\n", start, end);
   int interval = end - start;
 
   // int countOfElements = countOfElementsOnFile(arq);
@@ -117,32 +126,29 @@ void readAndShowTheIntervalOfStudents(FILE *arq) {
 
   long sizeOfStart = sizeOfEachStruct * (start-1);
   fseek(arq, sizeOfStart, SEEK_SET);
+  // aqui eu decidi por alocar apenas o pedaço de uma struct por conta do escopo do projeto
+  // se eu tivesse que fazer mais operações com as structs lidas eu faria um **, mas como não é o caso, apenas 1 struct serve bem
+  // allocate a one STUDENT struct
+  STUDENT *student = (STUDENT *)malloc(sizeof(STUDENT));
+  int i = 0;
 
-  struct student *students = (struct student *)malloc(sizeof(struct student) * (interval));
-  int i;
-  int index = 0;
-
-  for (i = 0; i < interval; i++) {
-    index = i+start; // to access the right index
-    printf("INDEX: %d\n", index);
+  do {
+    fread(&student->nusp  , sizeof(int  )     , 1, arq);
+    fread(&student->name  , sizeof(char ) * 50, 1, arq);
+    fread(&student->course, sizeof(char ) * 50, 1, arq);
+    fread(&student->grade , sizeof(float)     , 1, arq);
+    // printf(" i: %d \n", i);
     if(feof(arq)) {
       break;
     }
-    fread(&students[index].nusp  , sizeof(int  )     , 1, arq);
-    fread(&students[index].name  , sizeof(char ) * 50, 1, arq);
-    fread(&students[index].course, sizeof(char ) * 50, 1, arq);
-    fread(&students[index].grade , sizeof(float)     , 1, arq);
-    printf("nUSP: %d\n", students[index].nusp);
-    printf("Nome: %s\n", students[index].name);
-    printf("Curso: %s\n", students[index].course);
-    printf("Nota: %.2f\n", students[index].grade);
 
-    if(feof(arq)) {
-      break;
-    }
-    printf("\n");
-  }
-  free(students);
+    checkIfNeedToPrintSeparator(feof(arq), i, interval);
+    i++;
+    printStudent(student);
+    // printf("\n Condition: %d %d", !feof(arq), (i < interval));
+  } while(!feof(arq) && (i < interval+1 ));
+
+  free(student);
 }
 
 
@@ -153,17 +159,14 @@ void readAndShowSpecificRegistry(FILE *arq) {
   long sizeOfEachStruct = sumOfSizeOfStruct();
 
   long sizeOfStart = sizeOfEachStruct * (specificRegistry-1); // index
-  struct student *specificStudent = (struct student *)malloc(sizeof(struct student));
+  STUDENT *specificStudent = (STUDENT *)malloc(sizeof(STUDENT));
   fseek(arq, sizeOfStart, SEEK_SET);
 
   fread(&specificStudent->nusp  , sizeof(int  )     , 1, arq);
   fread(&specificStudent->name  , sizeof(char ) * 50, 1, arq);
   fread(&specificStudent->course, sizeof(char ) * 50, 1, arq);
   fread(&specificStudent->grade , sizeof(float)     , 1, arq);
-  printf("%d\n",   specificStudent->nusp);
-  printf("%s\n",   specificStudent->name);
-  printf("%s\n",   specificStudent->course);
-  printf("%.2f\n", specificStudent->grade);
+  printStudent(specificStudent);
   
   free(specificStudent);
 }
@@ -175,8 +178,7 @@ int main () {
   filename = readLine();
   scanf("%d", &operation);
   
-  printf("%s %d\n", filename, operation);
-  FILE *file = fopen(filename, "r");
+  FILE *file = fopen(filename, "rb+");
 
   if(file == NULL ) {
     printf("File not found or empty\n");

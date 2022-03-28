@@ -1,4 +1,5 @@
 MAIN=Main.c
+UTIL=Student.c
 BINARY=atr
 
 all:
