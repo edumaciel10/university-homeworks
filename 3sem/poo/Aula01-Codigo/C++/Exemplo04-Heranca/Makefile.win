@@ -1,0 +1,45 @@
+# Project: Project5
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = main.o Terrestres.o Animal.o Aquaticos.o Cachorro.o Lambari.o $(RES)
+LINKOBJ  = main.o Terrestres.o Animal.o Aquaticos.o Cachorro.o Lambari.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib"  
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+BIN  = Exemplo04-Heranca.exe
+CXXFLAGS = $(CXXINCS)  
+CFLAGS = $(INCS)  
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before Exemplo04-Heranca.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "Exemplo04-Heranca.exe" $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+Terrestres.o: Terrestres.cpp
+	$(CPP) -c Terrestres.cpp -o Terrestres.o $(CXXFLAGS)
+
+Animal.o: Animal.cpp
+	$(CPP) -c Animal.cpp -o Animal.o $(CXXFLAGS)
+
+Aquaticos.o: Aquaticos.cpp
+	$(CPP) -c Aquaticos.cpp -o Aquaticos.o $(CXXFLAGS)
+
+Cachorro.o: Cachorro.cpp
+	$(CPP) -c Cachorro.cpp -o Cachorro.o $(CXXFLAGS)
+
+Lambari.o: Lambari.cpp
+	$(CPP) -c Lambari.cpp -o Lambari.o $(CXXFLAGS)
