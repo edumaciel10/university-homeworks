@@ -31,7 +31,7 @@ boolean arquivoLerLinhaSalvarAndIndexar(FILE* arqDados, FILE* arqIndex){
     return resultadoDados;
   }
 
-  // resultadoIndex = arquivoIndexarLinha(arqIndex, linha);
+  resultadoIndex = arquivoIndexarLinha(arqIndex, linha);
   free(linha);
 
   return resultadoDados;
@@ -51,6 +51,8 @@ boolean arquivoIndexarLinha(FILE* arqIndex, char* linha){
 
   // curso
   char* curso = strtok(NULL, ARQ_SEPARADOR);
+
+
 
   // boolean resultadoIndex = arquivoSalvarIndex(arqIndex)
   
@@ -77,18 +79,14 @@ boolean arquivoSalvarLinha(FILE* arq, char* linha){
 
   // nota
   char* nota_ = strtok(NULL, ARQ_SEPARADOR);
-  int nota = atof(nota_);
+  float nota = atof(nota_);
+  // float nota = 2.00;
 
-  printf("\n nusp: %d", nUSP);
-  printf("\n nome: %s", nome);
-  printf("\n curso: %s", curso);
-  printf("\n nota: %d", nota);
+  ALUNO *aluno = alunoCriar(nUSP, nome,sobrenome,  curso, nota);
 
-  ALUNO *aluno = alunoCriar(nUSP, nome, curso, nota);
   if(aluno == NULL){
     return FALSE;
   }
-  
 
   boolean resultadoDados = arquivoSalvarAluno(arq, aluno);
 
@@ -101,7 +99,7 @@ boolean arquivoSalvarAluno(FILE* arq, ALUNO* aluno){
   if(arq == NULL || aluno == NULL){
     return FALSE;
   }
-
+  printf("\nsalvei no %ld\n",ftell(arq));
   boolean resultado = fwrite(aluno, alunoTamanhoStruct(), 1, arq);
 
   if(!resultado){
@@ -125,6 +123,7 @@ int arquivoNumRegistros(FILE* arq){
   fseek(arq, 0, SEEK_SET);
   // printf("tamnho: %ld\n", tamanho);
   // printf("alinoTamanhoStruct: %ld\n", alunoTamanhoStruct());
+  // fseek(arq, 0, SEEK_SET);
   int len = tamanho/alunoTamanhoStruct();
   return len;
 }
@@ -134,7 +133,7 @@ boolean arquivoSelecionarOperacao(FILE *arq, int op){
   int comeco, fim, len;
 
   len = arquivoNumRegistros(arq);
-  // printf("len = arquivoNumRegistros(arq); === %d",len)
+  // printf("len = arquivoNumRegistros(arq); === %d",len);
   switch(op){
     case ARQ_SHOW_ALL:
       result = arquivoLerFaixa(arq, 1, len);
@@ -182,13 +181,17 @@ boolean arquivoLerFaixa(FILE *arq, int comeco, int fim){
   // como não será utilizado nada mais que isso, é possível liberar a memória após a leitura.
   for(int i = comeco; i <= fim && i <= len; i++){
     aluno = arquivoLerRegistro(arq);
+    alunoImprimir(aluno);
+
+    if(aluno == NULL){
+      printf("ALuno é null!!");
+    }
 
     if(aluno != NULL){
       alunoImprimir(aluno);
     }
 
     alunoApagar(&aluno);
-
     if(i < fim && i < len){
       printf("\n");
     }
@@ -200,16 +203,23 @@ boolean arquivoLerFaixa(FILE *arq, int comeco, int fim){
 static ALUNO* arquivoLerRegistro(FILE *arq){
   int nUSP;
   char nome[50];
+  char sobrenome[50];
   char curso[50];
   float nota;
+
+  if(arq == NULL){
+    printf("\nErro ao ler registro do arquivo");
+  }
 
   if(arq != NULL && !feof(arq)){
     fread(&nUSP, sizeof(int), 1, arq);
     fread(nome, sizeof(char[50]), 1, arq);
+    fread(sobrenome, sizeof(char[50]), 1, arq);
     fread(curso, sizeof(char[50]), 1, arq);
     fread(&nota, sizeof(float), 1, arq);
 
-    ALUNO* aluno = alunoCriar(nUSP, nome, curso, nota);
+
+    ALUNO* aluno = alunoCriar(nUSP, nome, sobrenome, curso, nota);
     return aluno;
   }
 
