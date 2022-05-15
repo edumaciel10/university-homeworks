@@ -11,6 +11,11 @@ struct aluno_st{
   float nota;
 };
 
+struct aluno_index_st{
+  int chavePrimaria;
+  long byteOffset;
+};
+
 
 // Funções públicas
 ALUNO* alunoCriar(int nUSP, char *nome_,char *sobrenome_, char *curso_, float nota){
@@ -38,7 +43,7 @@ ALUNO* alunoCriar(int nUSP, char *nome_,char *sobrenome_, char *curso_, float no
     strcpy(aluno->sobrenome, sobrenome);
     strcpy(aluno->curso, curso);
     aluno->nota = nota;
-
+    // printf("\n aluno criar nota: %f\n", aluno->nota);
     return aluno;
   }
 

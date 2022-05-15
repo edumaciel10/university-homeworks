@@ -7,7 +7,7 @@
 
 typedef struct aluno_st ALUNO;
 
-ALUNO* alunoCriar(int nUSP, char* nome, char* curso, float nota);
+ALUNO* alunoCriar(int nUSP, char *nome_,char *sobrenome_, char *curso_, float nota);
 boolean alunoImprimir(ALUNO *aluno);
 long int alunoTamanhoStruct();
 boolean alunoApagar(ALUNO **aluno);

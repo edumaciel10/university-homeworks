@@ -10,15 +10,16 @@
 int main(){
   // INCLUSÃO
   FILE *arqDados = arquivoAbrir(ARQ_NOME, "ab");
-  FILE *arqIndex = arquivoAbrir(ARQ_NOME, "ab");
+  FILE *arqIndex = arquivoAbrir(ARQ_INDEX, "ab");
   
   boolean resultado;
   do{
     char * acao;
     scanf("%s", acao);
+    // printf("acao: %s\n", acao);
     // char* acao = strtok(linha, " ");
     if(strcmp(acao, "insert") == 0) {
-      printf("On insert");
+      // printf("On insert");
       resultado = arquivoLerLinhaSalvarAndIndexar(arqDados, arqIndex);
     }
 
@@ -28,19 +29,14 @@ int main(){
 
   }while(resultado);
 
-  arquivoSelecionarOperacao(arqDados, ARQ_SHOW_ALL);
   // return 0;
   arquivoFechar(&arqDados);
   arquivoFechar(&arqIndex);
 
   // LEITURA
   arqDados = arquivoAbrir(ARQ_NOME, "rb");
-
-  int len = arquivoNumRegistros(arqDados);
-
-
-  // arquivoSelecionarOperacao(arq, ARQ_SHOW_SECOND_HALF);
-  arquivoLerFaixa(arqDados, len-9, len);
+  printf("\n\n");
+  arquivoSelecionarOperacao(arqDados, ARQ_SHOW_ALL);
 
   arquivoFechar(&arqDados);
 
