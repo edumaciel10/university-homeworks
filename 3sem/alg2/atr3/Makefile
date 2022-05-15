@@ -1,8 +1,8 @@
 MAIN = main.c
-SOURCES = Aluno.c Arquivo.c
+SOURCES = Aluno.c Arquivo.c Indice.c
 UTIL = Util.c
 BINARY = main
-NAME = ex0
+NAME = ex2
 
 all:
 	gcc -Wall -g $(UTIL) $(SOURCES) $(MAIN) -o $(BINARY)

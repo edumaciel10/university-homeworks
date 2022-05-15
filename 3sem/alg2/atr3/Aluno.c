@@ -5,35 +5,25 @@
 
 struct aluno_st{
   int nUSP;
-  char nome[50];
-  char sobrenome[50];
-  char curso[50];
+  char nome[ALUNO_NAME_LEN];
+  char sobrenome[ALUNO_SURNAME_LEN];
+  char curso[ALUNO_COURSE_LEN];
   float nota;
-};
-
-struct aluno_index_st{
-  int chavePrimaria;
-  long byteOffset;
 };
 
 
 // Funções públicas
-ALUNO* alunoCriar(int nUSP, char *nome_,char *sobrenome_, char *curso_, float nota){
-  char nome[50];
-  char sobrenome[50];
-  char curso[50];
+ALUNO* alunoCriar(int nUSP, char *nome_, char *sobrenome_, char *curso_, float nota){
+  char nome[ALUNO_NAME_LEN];
+  char sobrenome[ALUNO_SURNAME_LEN];
+  char curso[ALUNO_COURSE_LEN];
+
   strcpy(nome, nome_);
   strcpy(sobrenome, sobrenome_);
   strcpy(curso, curso_);
 
-  boolean nUSPValido = nUSP > 0 ;
-  boolean nomeValido = strlen(nome) > 0;
-  boolean sobrenomeValido = strlen(sobrenome) > 0;
-  boolean cursoValido = strlen(curso) > 0;
-  boolean notaValida =  nota >= 0 && nota <= 10;
-
-  if(nUSPValido && nomeValido && sobrenomeValido && cursoValido && notaValida){
-    ALUNO* aluno = (ALUNO*) malloc(sizeof(ALUNO));
+  if(nUSP > 0 && nome != NULL && sobrenome != NULL && curso != NULL && nota >= 0 && nota <= 10){
+    ALUNO* aluno = malloc(sizeof(ALUNO));
     if(aluno == NULL){
       return NULL;
     }
@@ -43,11 +33,26 @@ ALUNO* alunoCriar(int nUSP, char *nome_,char *sobrenome_, char *curso_, float no
     strcpy(aluno->sobrenome, sobrenome);
     strcpy(aluno->curso, curso);
     aluno->nota = nota;
-    // printf("\n aluno criar nota: %f\n", aluno->nota);
+
     return aluno;
   }
 
   return NULL;
+}
+
+ALUNO* alunoCriarVazio(){
+  ALUNO *aluno = malloc(sizeof(ALUNO));
+  if(aluno == NULL){
+    return NULL;
+  }
+
+  aluno->nUSP = -1;
+  strcpy(aluno->nome,"");
+  strcpy(aluno->sobrenome,"");
+  strcpy(aluno->curso,"");
+  aluno->nota = -1;
+
+  return aluno;
 }
 
 boolean alunoImprimir(ALUNO *aluno){
@@ -55,12 +60,31 @@ boolean alunoImprimir(ALUNO *aluno){
     return FALSE;
   }
 
-  printf("nUSP: %d", aluno->nUSP);
-  printf("\nNome: %s", aluno->nome);
-  printf("\nSobrenome: %s", aluno->sobrenome);
-  printf("\nCurso: %s", aluno->curso);
-  printf("\nNota: %.2f\n", aluno->nota);
+  printf("-------------------------------");
+  printf("\nUSP number: %d", aluno->nUSP);
+  printf("\nName: %s", aluno->nome);
+  printf("\nSurname: %s", aluno->sobrenome);
+  printf("\nCourse: %s", aluno->curso);
+  printf("\nTest grade: %.2f", aluno->nota);
+  printf("\n-------------------------------\n");
 
+  return TRUE;
+}
+
+int alunoGetNUSP(ALUNO *aluno){
+  if(aluno == NULL){
+    return FALSE;
+  }
+
+  return aluno->nUSP;
+}
+
+int alunoSetNUSP(ALUNO *aluno, int NUSP){
+  if(aluno == NULL){
+    return FALSE;
+  }
+
+  aluno->nUSP = NUSP;
   return TRUE;
 }
 

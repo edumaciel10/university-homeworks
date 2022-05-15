@@ -4,74 +4,82 @@
 #include"Arquivo.h"
 
 // Funções auxiliares
-static ALUNO* arquivoLerRegistro(FILE *arq);
+static ALUNO* separarCamposAluno(char *dados);
 
 // Funções públicas
 FILE* arquivoAbrir(char* nomeArq, char* modo){
   if(nomeArq == NULL){
+    return NULL;
+  }
+
+  FILE *arq = fopen(nomeArq, modo);
+  if(arq == NULL){
     printf("\nErro ao abrir o arquivo");
     exit(-1);
   }
 
-  FILE *arq = fopen(nomeArq, modo);
-
   return arq;
 }
 
-boolean arquivoLerLinhaSalvarAndIndexar(FILE* arqDados, FILE* arqIndex){
-  if(arqDados == NULL){
-    return FALSE;
+int arquivoDividirOpALuno(char *linha, ALUNO **aluno){
+  if(linha == NULL){
+    printf("\nLinha invalida!");
+    exit(-1);
   }
 
-  char* linha = readLine();
-  boolean resultadoDados;
-  boolean resultadoIndex;
-  resultadoDados = arquivoSalvarLinha(arqDados, linha);
-  if(resultadoDados == FALSE ) {
-    return resultadoDados;
+  // Descobrindo nome da operação
+  char* auxLinha = calloc(strlen(linha)+1, sizeof(char));
+  strcpy(auxLinha, linha);
+  char* nomeOperacao = strtok(auxLinha, " ");
+
+  // String com os parâmetros da operação
+  char* dados = strchr(linha, ' ');
+
+  int NUSP, operacao;
+  if( strcmp(nomeOperacao, "insert") == 0 ){
+    operacao = ARQ_INSERT;
+
+    (*aluno) = separarCamposAluno(dados);
+  }
+  else if( strcmp(nomeOperacao, "search") == 0 ){
+    operacao = ARQ_SEARCH;
+
+    NUSP = atoi(dados);
+    (*aluno) = alunoCriarVazio();
+    alunoSetNUSP(*aluno, NUSP);
+  }
+  else if( strcmp(nomeOperacao, "delete") == 0 ){
+    operacao = ARQ_DELETE;
+
+    NUSP = atoi(dados);
+    (*aluno) = alunoCriarVazio();
+    alunoSetNUSP(*aluno, NUSP);
+  }
+  else if( strcmp(nomeOperacao, "exit") == 0 ){
+    operacao = ARQ_EXIT;
+  }
+  else{
+    operacao = -1;
   }
 
-  resultadoIndex = arquivoIndexarLinha(arqIndex, linha);
-  free(linha);
+  free(auxLinha);
 
-  return resultadoDados;
+  return operacao;
 }
 
-boolean arquivoIndexarLinha(FILE* arqIndex, char* linha){
-  if(arqIndex == NULL || linha == NULL || strlen(linha) < ALUNO_NUM_CAMPOS){
-    return FALSE;
+static ALUNO* separarCamposAluno(char *dados){
+  if(dados == NULL || strlen(dados) < ALUNO_NUM_CAMPOS){
+    return NULL;
   }
 
   // nUSP
-  char* nUSP_ = strtok(linha, ARQ_SEPARADOR);
+  char* nUSP_ = strtok(dados, ARQ_SEPARADOR);
   int nUSP = atoi(nUSP_);
 
   // nome
   char* nome = strtok(NULL, ARQ_SEPARADOR);
 
-  // curso
-  char* curso = strtok(NULL, ARQ_SEPARADOR);
-
-
-
-  // boolean resultadoIndex = arquivoSalvarIndex(arqIndex)
-  
-
-  return FALSE;
-}
-
-boolean arquivoSalvarLinha(FILE* arq, char* linha){
-  if(arq == NULL || linha == NULL || strlen(linha) < ALUNO_NUM_CAMPOS){
-    return FALSE;
-  }
-
-  // nUSP
-  char* nUSP_ = strtok(linha, ARQ_SEPARADOR);
-  int nUSP = atoi(nUSP_);
-
-  // nome
-  char* nome = strtok(NULL, ARQ_SEPARADOR);
-  
+  // sobrenome
   char* sobrenome = strtok(NULL, ARQ_SEPARADOR);
 
   // curso
@@ -80,150 +88,62 @@ boolean arquivoSalvarLinha(FILE* arq, char* linha){
   // nota
   char* nota_ = strtok(NULL, ARQ_SEPARADOR);
   float nota = atof(nota_);
-  // float nota = 2.00;
 
-  ALUNO *aluno = alunoCriar(nUSP, nome,sobrenome,  curso, nota);
+  ALUNO *aluno = alunoCriar(nUSP, nome, sobrenome, curso, nota);
 
-  if(aluno == NULL){
-    return FALSE;
-  }
-
-  boolean resultadoDados = arquivoSalvarAluno(arq, aluno);
-
-  alunoApagar(&aluno);
-
-  return resultadoDados;
+  return aluno;
 }
 
-boolean arquivoSalvarAluno(FILE* arq, ALUNO* aluno){
-  if(arq == NULL || aluno == NULL){
-    return FALSE;
-  }
-  printf("\nsalvei no %ld\n",ftell(arq));
-  boolean resultado = fwrite(aluno, alunoTamanhoStruct(), 1, arq);
-
-  if(!resultado){
-    printf("\nErro ao salvar no arquivo");
-    exit(-1);
+boolean arquivoInsert(FILE *arqDados, INDICE **indices, int *indicesLen, ALUNO *aluno){
+  if(arqDados == NULL || aluno == NULL){
+    printf("Erro ao inserir registro!");
+    exit(1);
   }
 
-  return resultado;
-}
-
-int arquivoNumRegistros(FILE* arq){
-  if(arq == NULL){
-    return -1;
-  }
-
-  fseek(arq, 0, SEEK_END);
-
-  long int tamanho = ftell(arq);
-
-  // quantidade de alunos no arquivo
-  fseek(arq, 0, SEEK_SET);
-  // printf("tamnho: %ld\n", tamanho);
-  // printf("alinoTamanhoStruct: %ld\n", alunoTamanhoStruct());
-  // fseek(arq, 0, SEEK_SET);
-  int len = tamanho/alunoTamanhoStruct();
-  return len;
-}
-
-boolean arquivoSelecionarOperacao(FILE *arq, int op){
-  boolean result;
-  int comeco, fim, len;
-
-  len = arquivoNumRegistros(arq);
-  // printf("len = arquivoNumRegistros(arq); === %d",len);
-  switch(op){
-    case ARQ_SHOW_ALL:
-      result = arquivoLerFaixa(arq, 1, len);
-      break;
-
-    case ARQ_SHOW_FIRST_HALF:
-      result = arquivoLerFaixa(arq, 1, len/2);
-      break;
-
-    case ARQ_SHOW_SECOND_HALF:
-      result = arquivoLerFaixa(arq, 1+(len/2), len);
-      break;
-
-    case ARQ_SHOW_SLICE:
-      scanf("%d %d", &comeco, &fim);
-      result = arquivoLerFaixa(arq, comeco, fim);
-      break;
-
-    case ARQ_SHOW_ONE:
-      scanf("%d", &comeco);
-      result = arquivoLerFaixa(arq, comeco, comeco);
-      break;
-
-    default:
-      return FALSE;
-  }
-
-  return result;
-}
-
-// este é o método principal do programa, basicamente todas as operações são baseadas em ler uma faixa de registros
-// então nós apenas manipulamos onde que vai começar e onde que vai terminar a leitura dentro do arquivo
-boolean arquivoLerFaixa(FILE *arq, int comeco, int fim){
-  if(arq == NULL){
-    printf("\nErro ao ler faixa do arquivo");
-    exit(-1);
-  }
-  ALUNO *aluno;
-  int len = arquivoNumRegistros(arq);
-  
-  fseek(arq, alunoTamanhoStruct()*(comeco-1), SEEK_SET);
-
-
-  // de acordo com o projeto a ideia é apenas consultar o aluno no arquivo e exibir seus dados
-  // como não será utilizado nada mais que isso, é possível liberar a memória após a leitura.
-  for(int i = comeco; i <= fim && i <= len; i++){
-    aluno = arquivoLerRegistro(arq);
-    alunoImprimir(aluno);
-
-    if(aluno == NULL){
-      printf("ALuno é null!!");
-    }
-
-    if(aluno != NULL){
-      alunoImprimir(aluno);
-    }
-
-    alunoApagar(&aluno);
-    if(i < fim && i < len){
-      printf("\n");
-    }
-  }
+  printf("inseri! :D\n");
 
   return TRUE;
 }
 
-static ALUNO* arquivoLerRegistro(FILE *arq){
-  int nUSP;
-  char nome[50];
-  char sobrenome[50];
-  char curso[50];
-  float nota;
-
-  if(arq == NULL){
-    printf("\nErro ao ler registro do arquivo");
-  }
-
-  if(arq != NULL && !feof(arq)){
-    fread(&nUSP, sizeof(int), 1, arq);
-    fread(nome, sizeof(char[50]), 1, arq);
-    fread(sobrenome, sizeof(char[50]), 1, arq);
-    fread(curso, sizeof(char[50]), 1, arq);
-    fread(&nota, sizeof(float), 1, arq);
-
-
-    ALUNO* aluno = alunoCriar(nUSP, nome, sobrenome, curso, nota);
-    return aluno;
-  }
-
+ALUNO* arquivoSearch(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP){
+  printf("pesquisei! :D\n");
   return NULL;
+}
+
+boolean arquivoDelete(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP){
+  printf("deletei! :D\n");
+  return TRUE;
+}
+
+long int arquivoCarregarArquivoIndice(FILE *arqIndices, INDICE ***indices){
+  if(arqIndices == NULL){
+    return -1;
+  }
+
+  fseek(arqIndices, 0, SEEK_END);
+  long int tamanhoArq = ftell(arqIndices);
+  rewind(arqIndices);
+
+  long int qtdIndices = tamanhoArq / indiceTamanhoStruct();
+
+  if(qtdIndices == 0){
+    (*indices) = NULL;
+    return 0;
+  }
+
+  (*indices) = malloc(sizeof(indiceTamanhoStruct()) * qtdIndices );
+  if((*indices) == NULL){
+    printf("Erro ao alocar memoria para os indices!");
+    exit(1);
+  }
+
+  long int resultado = fread((*indices), sizeof(indiceTamanhoStruct()), qtdIndices, arqIndices);
+  if(resultado <= 0){
+    printf("Erro ao ler arquivo de indices!");
+    exit(1);
+  }
+
+  return qtdIndices;
 }
 
 boolean arquivoFechar(FILE **arq){
