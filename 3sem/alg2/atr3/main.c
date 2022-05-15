@@ -21,14 +21,15 @@ int main(){
   boolean resultado;
   do{
     input = readLine();
+
     alunoAuxiliar = NULL;
     alunoEncontrado = NULL;
 
     operacao = arquivoDividirOpALuno(input, &alunoAuxiliar);
-
     switch(operacao){
       case ARQ_INSERT:
         resultado = arquivoInsert(arqDados, indicesEmMemoria, &qtdIndices, alunoAuxiliar);
+        indiceImprimir(indicesEmMemoria[0]);
         break;
 
       case ARQ_SEARCH:
@@ -53,7 +54,6 @@ int main(){
         exit(1);
         break;
     }
-    printf("FREE INPUT\n");
     free(input);
 
     if(!resultado){
@@ -70,6 +70,11 @@ int main(){
 
   }while( operacao != ARQ_EXIT );
 
+  boolean salvarIndiciesArquivo = arquivoSalvarIndices(arqIndices, indicesEmMemoria, qtdIndices);
+  if(!salvarIndiciesArquivo){
+    printf("\nErro ao salvar indices no arquivo!");
+    exit(1);
+  }
 
   arquivoFechar(&arqDados);
   arquivoFechar(&arqIndices);

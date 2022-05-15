@@ -21,6 +21,24 @@ FILE* arquivoAbrir(char* nomeArq, char* modo){
   return arq;
 }
 
+boolean arquivoSalvarIndices(FILE* arqIndices, INDICE **indicesEmMemoria, int qtdIndices) {
+  if(indicesEmMemoria == NULL){
+    return FALSE;
+  }
+
+  for(int i = 0; i < qtdIndices-1; i++){
+    indiceImprimir(indicesEmMemoria[i]);
+    // boolean salvarIndex = fwrite(indicesEmMemoria[i], sizeof(INDICE*), 1, arqIndices);
+    // if(salvarIndex == FALSE) {
+    //   return FALSE;
+    // }
+  }
+
+  return TRUE;
+
+}
+
+
 int arquivoDividirOpALuno(char *linha, ALUNO **aluno){
   if(linha == NULL){
     printf("\nLinha invalida!");

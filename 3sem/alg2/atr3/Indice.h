@@ -7,7 +7,7 @@ typedef struct indice_st INDICE;
 
 INDICE* indiceCriar(int chave, int rrn);
 boolean indiceSalvar(INDICE **indice, int *indicesLen, int nusp);
-
+void indiceImprimir(INDICE *indice);
 int indiceGetChave(INDICE *indice);
 
 long int indiceGetRRN(INDICE *indice);

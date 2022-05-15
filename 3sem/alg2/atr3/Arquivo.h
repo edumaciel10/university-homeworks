@@ -3,6 +3,7 @@
 
 #include"Aluno.h"
 #include"Indice.h"
+#include"stdio.h"
 #include"Util.h"
 
 #define ARQ_SEPARADOR ","
@@ -13,6 +14,7 @@
 #define ARQ_DELETE 3
 
 FILE* arquivoAbrir(char *arq, char *modo);
+boolean arquivoSalvarIndices(FILE* arqIndices, INDICE **indicesEmMemoria, int qtdIndices);
 int arquivoDividirOpALuno(char *linha, ALUNO **aluno);
 boolean arquivoInsert(FILE *arqDados, INDICE **indices, int *indicesLen, ALUNO *aluno);
 ALUNO* arquivoSearch(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP);

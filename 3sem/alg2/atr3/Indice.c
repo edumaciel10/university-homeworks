@@ -4,7 +4,7 @@
 
 struct indice_st{
   int chave;
-  long int RRN;
+  int RRN;
 };
 
 
@@ -24,28 +24,22 @@ INDICE* indiceCriar(int chave, int RRN){
   }
   indice->chave = chave;
   indice->RRN = RRN;
-
-  printf("indice criado\n");
+  // indiceImprimir(indice);
   return indice;
 }
 
-boolean indiceSalvar(INDICE **indice, int *indicesLen, int nusp){
-  printf("nusp: %d\n", nusp);
-  printf("indicesLen: %d\n", *indicesLen);
-  printf("(*indicesLen)+1: %d\n", (*indicesLen)+1);
+boolean indiceSalvar(INDICE **indices, int *indicesLen, int nusp){
   INDICE *novoIndice = indiceCriar(nusp, (*indicesLen)+1);
-  printf("AAAA");
   if(novoIndice == NULL){
     return FALSE;
   }
+
   (*indicesLen)++;
 
-  indice = (INDICE**) realloc(indice, sizeof(INDICE)*(*indicesLen));
+  indices = (INDICE**) realloc(indices, indiceTamanhoStruct() * (*indicesLen)+1);
 
-  indice[(*indicesLen)-1] = novoIndice;
+  indices[(*indicesLen)-1] = novoIndice;
 
-
-  printf("indice salvo\n");
   return TRUE;
 }
 
@@ -67,6 +61,14 @@ long int indiceGetRRN(INDICE *indice){
 
 long int indiceTamanhoStruct(){
   return sizeof(INDICE);
+}
+
+void indiceImprimir(INDICE *indice){
+  printf("----------------------------------------------------\n");
+  printf("chave: %d\n", indice->chave);
+  printf("RRN: %d\n", indice->RRN);
+  printf("----------------------------------------------------\n");
+
 }
 
 boolean indiceApagar(INDICE **indice){
