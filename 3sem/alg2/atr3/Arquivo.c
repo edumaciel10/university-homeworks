@@ -27,7 +27,7 @@ int arquivoDividirOpAluno(char *linha, ALUNO **aluno){
   }
 
   // Descobrindo nome da operação
-  char* auxLinha = calloc(strlen(linha)+1, sizeof(char));
+  char* auxLinha = (char*) calloc(strlen(linha)+1, sizeof(char));
   strcpy(auxLinha, linha);
   char* nomeOperacao = strtok(auxLinha, " ");
 

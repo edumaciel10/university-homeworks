@@ -11,13 +11,15 @@ int main(){
 
   char *input;
   ALUNO *aluno;
+
+  // utilizamos int para operacao para ficar mais fácil dar um valor significativo as operações utilizando constantes
+
   int operacao;
   boolean resultado;
   do{
     input = readLine();
 
     aluno = NULL;
-
     operacao = arquivoDividirOpAluno(input, &aluno);
     resultado = arquivoExecutarOperacao(&indicesEmMemoria, 
                                         &qtdIndices, 
@@ -36,6 +38,7 @@ int main(){
 
   }while( operacao != ARQ_EXIT );
 
+  // descarregando os indices em memoria para o disco
   boolean salvarIndicesArquivo = arquivoSalvarIndices(indicesEmMemoria, qtdIndices);
   if(!salvarIndicesArquivo){
     printf("\nErro ao salvar indices no arquivo!");

@@ -73,12 +73,14 @@ boolean indiceAdicionar(INDICE ***indices, int *indicesLen, int chave, int rrn){
 }
 
 boolean indiceRemoverPorIndex(INDICE ***indices, int *indicesLen, int index){
-  if(indices == NULL || indicesLen <= 0 || index < 0){
+  if(indices == NULL || (*indicesLen) <= 0 || index < 0){
     return -1;
   }
 
   indiceApagar(&(*indices)[index]);
 
+  // assim que removido os que estão em sua frente precisam ser movidos para trás
+  // para evitar fragmentação
   for(int i = index; i < (*indicesLen)-1; i++){
     (*indices)[i] = (*indices)[i+1];
   }
@@ -89,7 +91,7 @@ boolean indiceRemoverPorIndex(INDICE ***indices, int *indicesLen, int index){
     (*indices) = NULL;
     return TRUE;
   }
-
+  // utilizamos assim para que caso o realloc dê errado, a gente n perca a referencia de indices
   INDICE **indicesAux = (INDICE**) realloc(*indices, indiceTamanhoStruct() * (*indicesLen));
   if(indicesAux == NULL){
     printf("Erro ao realocar memoria para os indices em memoria!");
