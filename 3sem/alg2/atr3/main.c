@@ -1,44 +1,78 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<string.h>
+
 #include"Util.h"
 #include"Aluno.h"
 #include"Arquivo.h"
 
-#define QTD_REGISTROS 10
-
 int main(){
-  // INCLUSÃO
-  FILE *arqDados = arquivoAbrir(ARQ_NOME, "ab");
-  FILE *arqIndex = arquivoAbrir(ARQ_INDEX, "ab");
-  
+  char* nomeArqDados = "dados.bin";
+  char* nomeArqIndices = "indices.bin";
+
+  FILE *arqDados = arquivoAbrir(nomeArqDados, "ab+");
+  FILE *arqIndices = arquivoAbrir(nomeArqIndices, "ab+");
+
+  INDICE **indicesEmMemoria;
+  int qtdIndices = arquivoCarregarArquivoIndice(arqIndices, &indicesEmMemoria);
+
+  char *input;
+  ALUNO *alunoAuxiliar, *alunoEncontrado;
+  int operacao;
   boolean resultado;
   do{
-    char * acao;
-    scanf("%s", acao);
-    // printf("acao: %s\n", acao);
-    // char* acao = strtok(linha, " ");
-    if(strcmp(acao, "insert") == 0) {
-      // printf("On insert");
-      resultado = arquivoLerLinhaSalvarAndIndexar(arqDados, arqIndex);
+    input = readLine();
+    alunoAuxiliar = NULL;
+    alunoEncontrado = NULL;
+
+    operacao = arquivoDividirOpALuno(input, &alunoAuxiliar);
+
+    switch(operacao){
+      case ARQ_INSERT:
+        resultado = arquivoInsert(arqDados, indicesEmMemoria, &qtdIndices, alunoAuxiliar);
+        break;
+
+      case ARQ_SEARCH:
+        alunoEncontrado = arquivoSearch( arqDados, indicesEmMemoria, qtdIndices, alunoGetNUSP(alunoAuxiliar) );
+        if(alunoEncontrado != NULL){
+          alunoImprimir(alunoEncontrado);
+        }
+        else{
+          printf("Registro nao encontrado!\n");
+        }
+        break;
+
+      case ARQ_DELETE:
+        resultado = arquivoDelete( arqDados, indicesEmMemoria, qtdIndices, alunoGetNUSP(alunoAuxiliar) );
+        break;
+
+      case ARQ_EXIT:
+        break;
+
+      default:
+        printf("\nOperacao nao encontrada!");
+        exit(1);
+        break;
     }
 
-    if(strcmp(acao, "exit") == 0) {
-      resultado = FALSE;
+    free(input);
+
+    if(!resultado){
+      printf("\nErro ao executar operacao!");
+      exit(1);
     }
 
-  }while(resultado);
+    if(alunoAuxiliar != NULL){
+      free(alunoAuxiliar);
+    }
+    if(alunoEncontrado != NULL){
+      free(alunoEncontrado);
+    }
 
-  // return 0;
+  }while( operacao != ARQ_EXIT );
+
+
   arquivoFechar(&arqDados);
-  arquivoFechar(&arqIndex);
-
-  // LEITURA
-  arqDados = arquivoAbrir(ARQ_NOME, "rb");
-  printf("\n\n");
-  arquivoSelecionarOperacao(arqDados, ARQ_SHOW_ALL);
-
-  arquivoFechar(&arqDados);
+  arquivoFechar(&arqIndices);
 
   return 0;
 }

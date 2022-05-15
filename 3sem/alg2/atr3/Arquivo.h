@@ -2,30 +2,22 @@
 #define ARQUIVO_H
 
 #include"Aluno.h"
+#include"Indice.h"
 #include"Util.h"
-#include"stdio.h" // para utilizar as assinaturas de FILE
-
-#define ARQ_NOME "data.bin"
-#define ARQ_INDEX "index.bin"
 
 #define ARQ_SEPARADOR ","
-#define ARQ_SHOW_ALL 1
-#define ARQ_SHOW_FIRST_HALF 2
-#define ARQ_SHOW_SECOND_HALF 3
-#define ARQ_SHOW_SLICE 4
-#define ARQ_SHOW_ONE 5
 
-FILE* arquivoAbrir(char* nomeArq, char* modo);
+#define ARQ_EXIT 0
+#define ARQ_INSERT 1
+#define ARQ_SEARCH 2
+#define ARQ_DELETE 3
 
-boolean arquivoLerLinhaSalvarAndIndexar(FILE* arqDados, FILE* arqIndex);
-boolean arquivoSalvarLinha(FILE* arq, char* linha);
-boolean arquivoIndexarLinha(FILE* arqIndex, char* linha);
-boolean arquivoSalvarAluno(FILE* arq, ALUNO* aluno);
-
-int arquivoNumRegistros(FILE* arq);
-boolean arquivoSelecionarOperacao(FILE *arq, int op);
-boolean arquivoLerFaixa(FILE *arq, int comeco, int fim);
-
+FILE* arquivoAbrir(char *arq, char *modo);
+int arquivoDividirOpALuno(char *linha, ALUNO **aluno);
+boolean arquivoInsert(FILE *arqDados, INDICE **indices, int *indicesLen, ALUNO *aluno);
+ALUNO* arquivoSearch(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP);
+boolean arquivoDelete(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP);
+long int arquivoCarregarArquivoIndice(FILE *arqIndices, INDICE ***indices);
 boolean arquivoFechar(FILE **arq);
 
 
