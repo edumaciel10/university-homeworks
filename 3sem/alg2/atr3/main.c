@@ -6,76 +6,43 @@
 #include"Arquivo.h"
 
 int main(){
-  char* nomeArqDados = "dados.bin";
-  char* nomeArqIndices = "indices.bin";
-
-  FILE *arqDados = arquivoAbrir(nomeArqDados, "ab+");
-  FILE *arqIndices = arquivoAbrir(nomeArqIndices, "ab+");
-
   INDICE **indicesEmMemoria;
-  int qtdIndices = arquivoCarregarArquivoIndice(arqIndices, &indicesEmMemoria);
+  int qtdIndices = arquivoCarregarArquivoIndice(&indicesEmMemoria);
+
   char *input;
-  ALUNO *alunoAuxiliar, *alunoEncontrado;
+  ALUNO *aluno;
   int operacao;
   boolean resultado;
   do{
     input = readLine();
 
-    alunoAuxiliar = NULL;
-    alunoEncontrado = NULL;
+    aluno = NULL;
 
-    operacao = arquivoDividirOpALuno(input, &alunoAuxiliar);
-    switch(operacao){
-      case ARQ_INSERT:
-        resultado = arquivoInsert(arqDados, &indicesEmMemoria, &qtdIndices, alunoAuxiliar);
-        break;
-
-      case ARQ_SEARCH:
-        alunoEncontrado = arquivoSearch( arqDados, indicesEmMemoria, qtdIndices, alunoGetNUSP(alunoAuxiliar) );
-        if(alunoEncontrado != NULL){
-          alunoImprimir(alunoEncontrado);
-        }
-        else{
-          printf("Registro nao encontrado!\n");
-        }
-        break;
-
-      case ARQ_DELETE:
-        resultado = arquivoDelete( arqDados, indicesEmMemoria, qtdIndices, alunoGetNUSP(alunoAuxiliar) );
-        break;
-
-      case ARQ_EXIT:
-        break;
-
-      default:
-        printf("\nOperacao nao encontrada!");
-        exit(1);
-        break;
-    }
-    free(input);
-
+    operacao = arquivoDividirOpAluno(input, &aluno);
+    resultado = arquivoExecutarOperacao(&indicesEmMemoria, 
+                                        &qtdIndices, 
+                                        aluno, 
+                                        operacao);
     if(!resultado){
-      printf("\nErro ao executar operacao!");
+      printf("\nErro ao executar operacao de codigo %d", operacao);
       exit(1);
     }
 
-    if(alunoAuxiliar != NULL){
-      free(alunoAuxiliar);
-    }
-    if(alunoEncontrado != NULL){
-      free(alunoEncontrado);
+    free(input);
+
+    if(aluno != NULL){
+      free(aluno);
     }
 
   }while( operacao != ARQ_EXIT );
 
-  boolean salvarIndicesArquivo = arquivoSalvarIndices(arqIndices, indicesEmMemoria, qtdIndices);
+  boolean salvarIndicesArquivo = arquivoSalvarIndices(indicesEmMemoria, qtdIndices);
   if(!salvarIndicesArquivo){
     printf("\nErro ao salvar indices no arquivo!");
     exit(1);
   }
 
-  arquivoFechar(&arqDados);
-  arquivoFechar(&arqIndices);
+  indiceApagarLista(&indicesEmMemoria, qtdIndices);
 
   return 0;
 }
