@@ -100,7 +100,21 @@ boolean arquivoInsert(FILE *arqDados, INDICE **indices, int *indicesLen, ALUNO *
     exit(1);
   }
 
-  printf("inseri! :D\n");
+  boolean resultadoSalvarDados = fwrite(aluno, alunoTamanhoStruct(), 1, arqDados);
+
+  if(!resultadoSalvarDados){
+    printf("\nErro ao salvar no arquivo de dados");
+    exit(-1);
+  }
+
+  boolean resultadoSalvarIndex = indiceSalvar(indices, indicesLen, alunoGetNUSP(aluno));
+  printf("OII \n");
+
+
+  if(resultadoSalvarIndex == FALSE){
+    printf("Erro ao salvar no arquivo de indices");
+    exit(-1);
+  }
 
   return TRUE;
 }

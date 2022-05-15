@@ -9,13 +9,44 @@ struct indice_st{
 
 
 // Funções públicas
-INDICE* indiceCriar(int chave, long int RRN){
+INDICE* indiceCriar(int chave, int RRN){
   if(RRN < 0){
     return NULL;
   }
+  printf("chave: %d\n", chave);
+  printf("RRN: %d\n", RRN);
 
-  INDICE *indice = malloc(sizeof(INDICE));
+  INDICE *indice = (INDICE*) malloc(sizeof(INDICE));
+
+  if(indice == NULL){
+    printf("Erro ao criar indice\n");
+    return NULL;
+  }
+  indice->chave = chave;
+  indice->RRN = RRN;
+
+  printf("indice criado\n");
   return indice;
+}
+
+boolean indiceSalvar(INDICE **indice, int *indicesLen, int nusp){
+  printf("nusp: %d\n", nusp);
+  printf("indicesLen: %d\n", *indicesLen);
+  printf("(*indicesLen)+1: %d\n", (*indicesLen)+1);
+  INDICE *novoIndice = indiceCriar(nusp, (*indicesLen)+1);
+  printf("AAAA");
+  if(novoIndice == NULL){
+    return FALSE;
+  }
+  (*indicesLen)++;
+
+  indice = (INDICE**) realloc(indice, sizeof(INDICE)*(*indicesLen));
+
+  indice[(*indicesLen)-1] = novoIndice;
+
+
+  printf("indice salvo\n");
+  return TRUE;
 }
 
 int indiceGetChave(INDICE *indice){

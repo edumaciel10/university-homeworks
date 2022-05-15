@@ -53,7 +53,7 @@ int main(){
         exit(1);
         break;
     }
-
+    printf("FREE INPUT\n");
     free(input);
 
     if(!resultado){
