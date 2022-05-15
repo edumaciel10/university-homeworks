@@ -16,11 +16,12 @@
 FILE* arquivoAbrir(char *arq, char *modo);
 boolean arquivoSalvarIndices(FILE* arqIndices, INDICE **indicesEmMemoria, int qtdIndices);
 int arquivoDividirOpALuno(char *linha, ALUNO **aluno);
-boolean arquivoInsert(FILE *arqDados, INDICE **indices, int *indicesLen, ALUNO *aluno);
+boolean arquivoInsert(FILE *arqDados, INDICE ***indices, int *indicesLen, ALUNO *aluno);
 ALUNO* arquivoSearch(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP);
 boolean arquivoDelete(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP);
 long int arquivoCarregarArquivoIndice(FILE *arqIndices, INDICE ***indices);
 boolean arquivoFechar(FILE **arq);
+int arquivoNumRegistros(FILE* arq, long int tamanhoRegistro);
 
 
 #endif // ARQUIVO_H

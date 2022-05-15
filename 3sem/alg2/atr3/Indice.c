@@ -10,11 +10,10 @@ struct indice_st{
 
 // Funções públicas
 INDICE* indiceCriar(int chave, int RRN){
+  printf("indiceCriar(%d, %d)\n", chave, RRN);
   if(RRN < 0){
     return NULL;
   }
-  printf("chave: %d\n", chave);
-  printf("RRN: %d\n", RRN);
 
   INDICE *indice = (INDICE*) malloc(sizeof(INDICE));
 
@@ -27,18 +26,21 @@ INDICE* indiceCriar(int chave, int RRN){
   // indiceImprimir(indice);
   return indice;
 }
-
-boolean indiceSalvar(INDICE **indices, int *indicesLen, int nusp){
-  INDICE *novoIndice = indiceCriar(nusp, (*indicesLen)+1);
+// utilizamos o parametro indices e indicesLen como referência, para manter o restante do programa também atualizado
+boolean indiceSalvar(INDICE ***indices, int *indicesLen, int nusp, int rrn){
+  INDICE *novoIndice = indiceCriar(nusp, rrn);
   if(novoIndice == NULL){
     return FALSE;
   }
 
+  // contabilizando o novo indice
   (*indicesLen)++;
 
-  indices = (INDICE**) realloc(indices, indiceTamanhoStruct() * (*indicesLen)+1);
+  // adicionando um espaço para o novo indice no final do array
+  *indices = (INDICE**) realloc(*indices, indiceTamanhoStruct() * ((*indicesLen) + 1));
 
-  indices[(*indicesLen)-1] = novoIndice;
+  // adicionando o novoIndice 
+  (*indices)[(*indicesLen)-1] = novoIndice;
 
   return TRUE;
 }
@@ -60,7 +62,7 @@ long int indiceGetRRN(INDICE *indice){
 }
 
 long int indiceTamanhoStruct(){
-  return sizeof(INDICE);
+  return sizeof(INDICE*);
 }
 
 void indiceImprimir(INDICE *indice){

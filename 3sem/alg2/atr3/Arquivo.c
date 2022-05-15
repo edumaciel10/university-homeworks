@@ -22,16 +22,19 @@ FILE* arquivoAbrir(char* nomeArq, char* modo){
 }
 
 boolean arquivoSalvarIndices(FILE* arqIndices, INDICE **indicesEmMemoria, int qtdIndices) {
+  printf("\nSalvando indices em arquivo...");
   if(indicesEmMemoria == NULL){
     return FALSE;
   }
 
-  for(int i = 0; i < qtdIndices-1; i++){
-    indiceImprimir(indicesEmMemoria[i]);
-    // boolean salvarIndex = fwrite(indicesEmMemoria[i], sizeof(INDICE*), 1, arqIndices);
-    // if(salvarIndex == FALSE) {
-    //   return FALSE;
-    // }
+  for(int i = 0; i < qtdIndices; i++){
+    // indiceImprimir(indicesEmMemoria[i]);
+
+    boolean salvarIndex = fwrite(indicesEmMemoria[i], indiceTamanhoStruct(), 1, arqIndices);
+
+    if(salvarIndex == FALSE) {
+      return FALSE;
+    }
   }
 
   return TRUE;
@@ -112,7 +115,7 @@ static ALUNO* separarCamposAluno(char *dados){
   return aluno;
 }
 
-boolean arquivoInsert(FILE *arqDados, INDICE **indices, int *indicesLen, ALUNO *aluno){
+boolean arquivoInsert(FILE *arqDados, INDICE ***indices, int *indicesLen, ALUNO *aluno){
   if(arqDados == NULL || aluno == NULL){
     printf("Erro ao inserir registro!");
     exit(1);
@@ -124,10 +127,9 @@ boolean arquivoInsert(FILE *arqDados, INDICE **indices, int *indicesLen, ALUNO *
     printf("\nErro ao salvar no arquivo de dados");
     exit(-1);
   }
-
-  boolean resultadoSalvarIndex = indiceSalvar(indices, indicesLen, alunoGetNUSP(aluno));
-  printf("OII \n");
-
+  // salva o rrn sendo o último registro salvo no arquivo de dados
+  int rrn = arquivoNumRegistros(arqDados, alunoTamanhoStruct());
+  boolean resultadoSalvarIndex = indiceSalvar(indices, indicesLen, alunoGetNUSP(aluno), rrn);
 
   if(resultadoSalvarIndex == FALSE){
     printf("Erro ao salvar no arquivo de indices");
@@ -147,7 +149,27 @@ boolean arquivoDelete(FILE *arqDados, INDICE **indices, int indicesLen, int NUSP
   return TRUE;
 }
 
+// função dinâmica para obter o número de registros de qualquer arquivo para qualquer tamanho de registro
+int arquivoNumRegistros(FILE* arq, long int tamanhoRegistro){
+  if(arq == NULL){
+    return -1;
+  }
+
+  fseek(arq, 0, SEEK_END);
+
+  long int tamanho = ftell(arq);
+  rewind(arq);
+
+  fseek(arq, 0, SEEK_SET);
+
+  int len = tamanho/tamanhoRegistro;
+
+  return len;
+}
+// a ideia é carregar os indices já criados do arquivo para um vetor que será usado para buscar os alunos
+// durante a execução do programa, e "descarregado" ao final do programa
 long int arquivoCarregarArquivoIndice(FILE *arqIndices, INDICE ***indices){
+  // printf("\nCarregando indices do arquivo...");
   if(arqIndices == NULL){
     return -1;
   }
@@ -157,22 +179,27 @@ long int arquivoCarregarArquivoIndice(FILE *arqIndices, INDICE ***indices){
   rewind(arqIndices);
 
   long int qtdIndices = tamanhoArq / indiceTamanhoStruct();
-
   if(qtdIndices == 0){
     (*indices) = NULL;
     return 0;
   }
+  
+  (*indices) = (INDICE**) malloc(indiceTamanhoStruct() * qtdIndices );
 
-  (*indices) = malloc(sizeof(indiceTamanhoStruct()) * qtdIndices );
   if((*indices) == NULL){
     printf("Erro ao alocar memoria para os indices!");
     exit(1);
   }
 
-  long int resultado = fread((*indices), sizeof(indiceTamanhoStruct()), qtdIndices, arqIndices);
-  if(resultado <= 0){
-    printf("Erro ao ler arquivo de indices!");
-    exit(1);
+  for(int i = 0; i < qtdIndices; i++){
+    (*indices)[i] = (INDICE*) malloc(indiceTamanhoStruct());
+
+    fread((*indices)[i], indiceTamanhoStruct(), 1, arqIndices);
+    // indiceImprimir((*indices)[i]);
+    if((*indices)[i] == NULL){
+      printf("Erro ao alocar memoria para os indices!");
+      exit(1);
+    }
   }
 
   return qtdIndices;
