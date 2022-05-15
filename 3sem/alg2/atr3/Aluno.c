@@ -23,7 +23,7 @@ ALUNO* alunoCriar(int nUSP, char *nome_, char *sobrenome_, char *curso_, float n
   strcpy(curso, curso_);
 
   if(nUSP > 0 && nome != NULL && sobrenome != NULL && curso != NULL && nota >= 0 && nota <= 10){
-    ALUNO* aluno = malloc(sizeof(ALUNO));
+    ALUNO* aluno = calloc(sizeof(ALUNO), 1);
     if(aluno == NULL){
       return NULL;
     }
@@ -41,7 +41,7 @@ ALUNO* alunoCriar(int nUSP, char *nome_, char *sobrenome_, char *curso_, float n
 }
 
 ALUNO* alunoCriarVazio(){
-  ALUNO *aluno = malloc(sizeof(ALUNO));
+  ALUNO *aluno = calloc(sizeof(ALUNO), 1);
   if(aluno == NULL){
     return NULL;
   }
