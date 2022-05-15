@@ -14,21 +14,20 @@ int main(){
 
   INDICE **indicesEmMemoria;
   int qtdIndices = arquivoCarregarArquivoIndice(arqIndices, &indicesEmMemoria);
-
   char *input;
   ALUNO *alunoAuxiliar, *alunoEncontrado;
   int operacao;
   boolean resultado;
   do{
     input = readLine();
+
     alunoAuxiliar = NULL;
     alunoEncontrado = NULL;
 
     operacao = arquivoDividirOpALuno(input, &alunoAuxiliar);
-
     switch(operacao){
       case ARQ_INSERT:
-        resultado = arquivoInsert(arqDados, indicesEmMemoria, &qtdIndices, alunoAuxiliar);
+        resultado = arquivoInsert(arqDados, &indicesEmMemoria, &qtdIndices, alunoAuxiliar);
         break;
 
       case ARQ_SEARCH:
@@ -53,7 +52,6 @@ int main(){
         exit(1);
         break;
     }
-
     free(input);
 
     if(!resultado){
@@ -70,6 +68,11 @@ int main(){
 
   }while( operacao != ARQ_EXIT );
 
+  boolean salvarIndicesArquivo = arquivoSalvarIndices(arqIndices, indicesEmMemoria, qtdIndices);
+  if(!salvarIndicesArquivo){
+    printf("\nErro ao salvar indices no arquivo!");
+    exit(1);
+  }
 
   arquivoFechar(&arqDados);
   arquivoFechar(&arqIndices);
