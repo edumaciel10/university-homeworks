@@ -38,7 +38,7 @@ public class FileClass {
             words[6] = "Ela nunca ligou para maquiagem.";
             words[7] = "Ele dirige muito mal.";
 
-            /*Escreve os nomes de alguns livros*/
+            /*Escreve alguns trechos que contenham ou não muito */
             for (int i = 0; i < words.length; i++) {
                 raf.writeUTF(words[i]);
             }
@@ -49,13 +49,15 @@ public class FileClass {
             long seekAnterior = 0;
             while (raf.getFilePointer() < raf.length()) {
                 String line = raf.readUTF();
-                if(line.contains(oldWord)) {
-                  line = line.replaceAll(oldWord, newWord);
-                  raf.seek(seekAnterior);
+                if(line.contains(oldWord)) { // vê se tem ou não para substituir
+                  line = line.replaceAll(oldWord, newWord); // substitui
+                  raf.seek(seekAnterior); // volta para o início da linha e sobreescreve a linha antiga
                   raf.writeUTF(line);
                 }
-                seekAnterior = raf.getFilePointer();
+                seekAnterior = raf.getFilePointer(); // salvar o ponto inicial de cada linha
             }
+
+            // Volta ao inicio para ler os dados
             raf.seek(0);
 
             while (raf.getFilePointer() < raf.length()) {
