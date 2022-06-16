@@ -11,6 +11,11 @@ public class DadosPessoais implements Serializable{
     String sSexo;
     Endereco eEndereco;
 
+    DadosPessoais() {
+        this.sNome = "";
+        this.iIdade = 0;
+        this.sSexo = "";
+    }
     DadosPessoais(String nome, int idade, String sexo, Endereco endereco) {
         this.sNome = nome;
         this.iIdade = idade;
@@ -19,8 +24,6 @@ public class DadosPessoais implements Serializable{
     }
 
     public String toString() {
-        // return DadosPessoais data, breaking by line
-
-        return "DadosPessoais{\n" + "sNome=" + sNome + "\niIdade=" + iIdade + "\nsSexo=" + sSexo + "\neEndereco=" + eEndereco.toString() + '}';
+        return "DadosPessoais{ \n" + "\tsNome=" + sNome + "\n\tiIdade=" + iIdade + "\n\tsSexo=" + sSexo + "\n\teEndereco=" + eEndereco.toString() + "\n}";
     }
 }
