@@ -26,26 +26,24 @@ public class FileClass {
                 fTemp.createNewFile();
             }
 
-            Endereco end = new Endereco("Rua dos Bobos", "São Paulo", "SP", "Centro");
+            Endereco end = new Endereco("Rua dos Andradas", "São Paulo", "SP", "Centro");
+            Endereco end2 = new Endereco("Rua dos Silva", "São Carlos", "SP", "Centro");
+            Endereco end3 = new Endereco("Rua dos Maciel", "São José Dos Campos", "SP", "Centro");
+
             DadosPessoais dp = new DadosPessoais("Eduardo", 18, "M", end);
+            DadosPessoais dp2 = new DadosPessoais("Joao", 19, "M", end2);
+            DadosPessoais dp3 = new DadosPessoais("Junio", 21, "M", end3);
 
             FileOutputStream canoOut = new FileOutputStream(sAFile);
             GZIPOutputStream compactador = new GZIPOutputStream(canoOut);
             ObjectOutputStream serializador = new ObjectOutputStream(compactador);
 
             serializador.writeObject(dp);
+            serializador.writeObject(dp2);
+            serializador.writeObject(dp3);
 
             serializador.close();
             canoOut.close();
-
-            // FileInputStream canoIn = new FileInputStream(sAFile);
-            // GZIPInputStream descompactador = new GZIPInputStream(canoIn);
-            // ObjectInputStream deserializador = new ObjectInputStream(descompactador);
-
-            // dp = (DadosPessoais) deserializador.readObject();
-            // System.out.println(dp.toString());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -60,7 +58,6 @@ public class FileClass {
                 fTemp.createNewFile();
             }
 
-            // Endereco end = new Endereco("Rua dos Bobos", "São Paulo", "SP", "Centro");
             DadosPessoais dp = new DadosPessoais();
             FileInputStream canoIn = new FileInputStream(sAFile);
             GZIPInputStream descompactador = new GZIPInputStream(canoIn);
@@ -68,6 +65,12 @@ public class FileClass {
 
             dp = (DadosPessoais) deserializador.readObject();
             System.out.println(dp.toString());
+            dp = (DadosPessoais) deserializador.readObject();
+            System.out.println(dp.toString());
+            dp = (DadosPessoais) deserializador.readObject();
+            System.out.println(dp.toString());
+
+            deserializador.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {

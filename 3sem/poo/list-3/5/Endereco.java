@@ -14,6 +14,6 @@ public class Endereco implements Serializable {
     }
 
     public String toString() {
-        return "sRua= " + sRua + " sCidade= " + sCidade + " sEstado= " + sEstado + " sBairro= " + sBairro + '}';
+        return "\n\t\tsRua= " + sRua + "\n\t\tsCidade= " + sCidade + "\n\t\tsEstado= " + sEstado + "\n\t\tsBairro= " + sBairro ;
     }
 }
