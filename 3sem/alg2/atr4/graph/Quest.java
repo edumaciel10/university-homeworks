@@ -1,3 +1,5 @@
+package graph;
+
 public class Quest {
   private int ID;
   private String nome;
@@ -10,6 +12,6 @@ public class Quest {
   }
 
   public String toString() {
-    return "Quest{\n\tID= '"+ this.ID +"'\n\tname= '"+ this.nome +"'\n\tdescription= '"+this.descricao+"'\n}\n";
+    return "Quest{\n\tID= '" + this.ID + "'\n\tname= '" + this.nome + "'\n\tdescription= '" + this.descricao + "'\n}\n";
   }
 }
