@@ -9,23 +9,37 @@ public class Main {
     Scanner in = new Scanner(System.in);
 
     int numVertices = Integer.parseInt(in.nextLine());
-    ArrayList<Fase> fases = new ArrayList();
+    ArrayList<Vertex> quests = new ArrayList();
 
     for (int i = 0; i < numVertices; i++) {
       String nome = in.nextLine();
       String descricao = in.nextLine();
-      fases.add(new Fase(i, nome, descricao));
+      quests.add(new Quest(i, nome, descricao));
     }
 
-    for (Fase f : fases) {
-      System.out.println(f.toString());
-    }
+    /*
+     * for (Quest q : quests) {
+     * System.out.println(q.toString());
+     * }
+     */
+
+    AbstractGraph graph = new DigraphList(quests);
 
     int numArestas = Integer.parseInt(in.nextLine());
 
     for (int i = 0; i < numArestas; i++) {
-      int idNoOrigem = in.nextInt();
-      int idNoDestino = in.nextInt();
+      int indexOrigem = in.nextInt();
+      int indexDestino = in.nextInt();
+
+      Vertex questOrigem = quests.get(indexOrigem);
+      Vertex questDestino = quests.get(indexDestino);
+
+      graph.addEdge(questOrigem, questDestino);
     }
+
+    int indexStart = in.nextInt();
+
+    TraversalStrategy traversalStrategy = new BreadthFirstTraversal(graph);
+    traversalStrategy.traverseGraph(quests.get(indexStart));
   }
 }

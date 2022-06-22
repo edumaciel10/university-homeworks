@@ -1,17 +1,17 @@
 package graph;
 
-public class Quest {
+public class Quest extends Vertex {
   private int ID;
-  private String nome;
   private String descricao;
 
   Quest(int ID, String nome, String descricao) {
+    super(nome);
     this.ID = ID;
-    this.nome = nome;
     this.descricao = descricao;
   }
 
   public String toString() {
-    return "Quest{\n\tID= '" + this.ID + "'\n\tname= '" + this.nome + "'\n\tdescription= '" + this.descricao + "'\n}\n";
+    return "Quest{\n\tID= '" + this.ID + "'\n\tname= '" + super.getName() +
+        "'\n\tdescription= '" + this.descricao + "'\n}\n";
   }
 }
