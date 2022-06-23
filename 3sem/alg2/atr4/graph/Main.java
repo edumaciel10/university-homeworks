@@ -39,7 +39,7 @@ public class Main {
 
     int indexStart = in.nextInt();
 
-    TraversalStrategy traversalStrategy = new BreadthFirstTraversal(graph);
+    TraversalStrategy traversalStrategy = new DepthFirstTraversal(graph);
     traversalStrategy.traverseGraph(quests.get(indexStart));
   }
 }
